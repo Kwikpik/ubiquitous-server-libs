@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write **/**/*.{js,ts,json}"
   },
-  "keywords": ["kwikpik", "logistics", "delivery"],
+  "keywords": [
+    "kwikpik",
+    "logistics",
+    "delivery"
+  ],
   "author": "",
   "license": "ISC",
   "description": "",
@@ -19,7 +24,11 @@
   },
   "devDependencies": {
     "@types/joi": "^17.2.3",
-    "@types/lodash": "^4.17.4"
+    "@types/lodash": "^4.17.4",
+    "@types/node": "^20.14.2"
   },
-  "files": ["dist", "README.md"]
+  "files": [
+    "dist",
+    "README.md"
+  ]
 }
