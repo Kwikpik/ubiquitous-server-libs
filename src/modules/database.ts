@@ -1,6 +1,14 @@
-import { DataSource, type MixedList, type DataSourceOptions } from "typeorm";
+import {
+  DataSource,
+  type MixedList,
+  type DataSourceOptions,
+  type ObjectLiteral,
+  type EntityTarget,
+  FindOptionsWhere,
+} from "typeorm";
 import { ServiceNames } from "../constants";
 import { join } from "path";
+import { ExcludeFuctionsMapper, OptionalKeysMapper } from "../utils/mappers";
 
 interface LocalDataSourceOpts {
   /**
@@ -39,7 +47,7 @@ interface LocalDataSourceOpts {
 }
 
 class LocalDataSource {
-  private DS: DataSource;
+  public DS: DataSource;
 
   constructor(
     opts: LocalDataSourceOpts = {
@@ -107,8 +115,22 @@ class LocalDataSource {
       });
   }
 
-  public getDS() {
-    return this.DS;
+  public async insertEntity<T extends EntityTarget<ObjectLiteral>>(entity: T, values: ExcludeFuctionsMapper<T>) {
+    try {
+      const value = await this.DS.getRepository(entity).save(values);
+      return value;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async queryEntity<T extends EntityTarget<ObjectLiteral>>(entity: T, where: FindOptionsWhere<T>) {
+    try {
+      const value = await this.DS.getRepository(entity).findOne({ where });
+      return value;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
@@ -185,3 +207,5 @@ export const initializeConnectedDS = (opts?: LocalDataSourceOpts, silenceInfoLog
     return null;
   }
 };
+
+export type LocalDataSourceType = LocalDataSource;
