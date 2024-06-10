@@ -41,7 +41,7 @@ class LocalIPFSInstance {
     // Append file
     data.append("file", file);
 
-    const params: Record<string, any> = {};
+    const params: Record<string, boolean> = {};
 
     // Append params
     params.pin = true;

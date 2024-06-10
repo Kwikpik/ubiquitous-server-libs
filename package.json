@@ -4,7 +4,8 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write **/**/*.{js,ts,json}"
+    "format": "prettier --write **/**/*.{js,ts,json}",
+    "build": "rm -rf dist && npx tsc"
   },
   "keywords": [
     "kwikpik",
