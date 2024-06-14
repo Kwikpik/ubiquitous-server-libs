@@ -52,6 +52,11 @@ interface LocalDataSourceOpts {
    * Typeorm entities
    */
   entities?: MixedList<string | Function | EntitySchema<any>>;
+
+  /**
+   * Whether to use localhost instead of Docker environment
+   */
+  shouldUseLocalhost?: boolean;
 }
 
 class LocalDataSource {
@@ -64,6 +69,7 @@ class LocalDataSource {
       username: "postgres",
       password: "postgres",
       databaseName: "kwikpik_db",
+      shouldUseLocalhost: true,
     }
   ) {
     // Set default values;
@@ -78,9 +84,14 @@ class LocalDataSource {
       ([] as string[]).concat(join(__dirname, "/entities/*.{ts,js}")).concat(join(__dirname, "/models/*.{ts,js}"));
     opts.subscribers = opts.subscribers ?? ([] as string[]).concat(join(__dirname, "/subscribers/*.{ts,js}"));
     opts.log = opts.log ?? false;
+    opts.shouldUseLocalhost = opts.shouldUseLocalhost ?? true;
 
     const url = `postgres://${opts.username}:${opts.password}@${
-      opts.whichDBServer === "main" ? ServiceNames.MAIN_DB : ServiceNames.MONITORING_DB
+      opts.shouldUseLocalhost
+        ? "localhost"
+        : opts.whichDBServer === "main"
+        ? ServiceNames.MAIN_DB
+        : ServiceNames.MONITORING_DB
     }:${opts.port}/${opts.databaseName}`;
     const opt: DataSourceOptions = {
       url,

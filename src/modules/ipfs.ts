@@ -11,16 +11,22 @@ interface IPFSConfig {
    * Port to connect to.
    */
   port?: number;
+
+  /**
+   * If to use localhost instead of Docker environment
+   */
+  shouldUseLocalhost?: boolean;
 }
 
 class LocalIPFSInstance {
   private $httpInstance: SharedHTTPModule;
 
-  constructor(opts: IPFSConfig = { port: 5001 }) {
+  constructor(opts: IPFSConfig = { port: 5001, shouldUseLocalhost: true }) {
     // Set default value;
     opts.port = opts.port ?? 5001;
+    opts.shouldUseLocalhost = opts.shouldUseLocalhost ?? true;
 
-    const baseURL = `http://${ServiceNames.IPFS}:${opts.port}`;
+    const baseURL = `http://${opts.shouldUseLocalhost ? "localhost" : ServiceNames.IPFS}:${opts.port}`;
     this.$httpInstance = SharedHTTPModule.constructWithBaseURL(baseURL);
   }
 
