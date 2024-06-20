@@ -2,3 +2,4 @@ export * as database from "./database";
 export * as kafka from "./kafka";
 export * as ipfs from "./ipfs";
 export * as datasourceAccessors from "./datasource-accessors";
+//# sourceMappingURL=index.d.ts.map

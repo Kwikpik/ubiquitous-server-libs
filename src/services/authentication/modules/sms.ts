@@ -1,0 +1,4 @@
+
+class SMSModule {
+  constructor() {}
+}

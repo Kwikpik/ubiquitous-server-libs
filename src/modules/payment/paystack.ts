@@ -3,7 +3,7 @@ import { SharedHTTPModule } from "../../shared/http";
 import { PAYSTACK_SECRET } from "../../variables";
 
 class PaystackPaymentModule {
-  private httpModule: SharedHTTPModule | null = null;
+  private $: SharedHTTPModule | null = null;
 
   constructor(secret?: string) {
     const url: string = "https://api.paystack.co";
@@ -13,15 +13,22 @@ class PaystackPaymentModule {
 
     headers.authorization = authorization;
 
-    this.httpModule = new SharedHTTPModule(url, headers);
+    this.$ = new SharedHTTPModule(url, headers);
   }
 
   private checkHTTPModule() {
-    assert.ok(!!this.httpModule, "http_module_uninitialized");
+    assert.ok(!!this.$, "http_module_uninitialized");
   }
 
   checkChargeUsingPin(pin: string, reference: string) {
     this.checkHTTPModule();
-    return this.httpModule.post("/charge/submit_pin", { pin, reference });
+    return this.$.post("/charge/submit_pin", { pin, reference });
   }
 }
+
+/**
+ *
+ * @param secret Paystack secret key
+ * @returns
+ */
+export const initPaystackPayment = (secret?: string) => new PaystackPaymentModule(secret);
