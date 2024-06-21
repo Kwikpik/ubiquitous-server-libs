@@ -75,8 +75,9 @@ class FlutterwavePaymentModule {
 
 /**
  * Initialize Flutterwave payment module.
- * 
+ *
  * @param secret Flutterwave secret key.
- * @returns 
+ * @returns
  */
-export const initFlutterwavePaymentModule = (secret?: string) => FlutterwavePaymentModule.initializePaymentModule(secret);
+export const initFlutterwavePaymentModule = (secret?: string) =>
+  FlutterwavePaymentModule.initializePaymentModule(secret);
