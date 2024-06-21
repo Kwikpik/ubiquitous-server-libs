@@ -1,5 +1,5 @@
 import assert from "assert";
-import { SharedHTTPModule } from "../../shared/http";
+import { SharedHTTPModule } from "../../utils/http";
 import { PAYSTACK_SECRET } from "../../variables";
 
 class PaystackPaymentModule {

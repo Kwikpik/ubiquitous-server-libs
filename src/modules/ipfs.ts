@@ -1,7 +1,7 @@
 import isBase64 from "is-base64";
 import { FormData, File } from "formdata-node";
 import { HttpResponseTypes, ServiceNames } from "../constants";
-import { SharedHTTPModule } from "../shared/http";
+import { SharedHTTPModule } from "../utils/http";
 import assert from "assert";
 import { randomUUID } from "crypto";
 import isNil from "lodash/isNil";

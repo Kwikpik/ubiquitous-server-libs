@@ -1,6 +1,6 @@
 import assert from "assert";
 import { join } from "path";
-import { initializeAndConfigureTransport, send } from "../../../../shared/mail";
+import { initializeAndConfigureTransport, send } from "../../utils/mail";
 import { existsSync } from "fs";
 
 type UserType = "regular" | "business" | "merchant" | "rider";
