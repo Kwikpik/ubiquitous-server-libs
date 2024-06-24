@@ -1,1 +1,0 @@
-{"version":3,"file":"paystack.d.ts","sourceRoot":"","sources":["../../../src/modules/payment/paystack.ts"],"names":[],"mappings":"AAIA,cAAM,qBAAqB;IACzB,OAAO,CAAC,CAAC,CAAiC;gBAE9B,MAAM,CAAC,EAAE,MAAM;IAW3B,OAAO,CAAC,eAAe;IAIvB,mBAAmB,CAAC,GAAG,EAAE,MAAM,EAAE,SAAS,EAAE,MAAM;CAInD;AAED;;;;GAIG;AACH,eAAO,MAAM,mBAAmB,YAAa,MAAM,0BAAsC,CAAC"}
