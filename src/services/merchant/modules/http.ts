@@ -2,7 +2,7 @@ import { ServiceNames } from "../../../constants";
 import { SharedHTTPModule } from "../../../utils/http";
 import { fillStringPlaceholders } from "../../../utils/mappers";
 
-type AllowedSubEndpoints = "rider" | "user" | "business" | "merchant";
+type AllowedSubEndpoints = "orders" | "products" | "stores" | "admin";
 
 interface AuthHTTPModuleConfig {
   /**
@@ -16,42 +16,68 @@ interface AuthHTTPModuleConfig {
   port?: number;
 }
 
-enum Endpoints {
+enum OrderEndpoints {
+  GET_BY_ID = "/{id}",
+}
+
+enum ProductEndpoints {
+  GET_BY_ID = "/single/{id}",
+}
+
+enum AdminEndpoints {
   AUTHENTICATE = "/authenticate",
   GET_BY_ID = "/byId/{id}",
 }
 
+enum StoreEndpoints {
+  GET_BY_ID = "/{id}",
+}
+
 class HTTPModule {
   private $: SharedHTTPModule;
-  constructor(opts: AuthHTTPModuleConfig = { shouldUseLocalhost: false, port: 1700 }) {
+  constructor(opts: AuthHTTPModuleConfig = { shouldUseLocalhost: false, port: 1800 }) {
     // Set default values
     opts.shouldUseLocalhost = opts.shouldUseLocalhost ?? false;
-    opts.port = opts.port ?? 1700;
+    opts.port = opts.port ?? 1800;
 
-    const rootUrl: string = `http://${opts.shouldUseLocalhost ? "127.0.0.1" : ServiceNames.AUTHENTICATION}:${
-      opts.port
-    }`;
+    const rootUrl: string = `http://${opts.shouldUseLocalhost ? "127.0.0.1" : ServiceNames.MERCHANT}:${opts.port}`;
     this.$ = SharedHTTPModule.constructWithBaseURL(rootUrl);
   }
 
   /**
-   *
-   * @param subEndpoint Allowed sub-endpoint. {@link AllowedSubEndpoints | See possible values}.
+   *  Authenticate an admin
    * @param jwt JSON web token for authentication.
    * @returns
    */
-  async authenticate<T>(subEndpoint: AllowedSubEndpoints, jwt: string) {
+  async authenticate<T>(jwt: string) {
     const headers: Record<string, any> = {};
 
     headers.authorization = `Bearer ${jwt}`;
 
-    const fullPath = subEndpoint + "/" + Endpoints.AUTHENTICATE;
+    const fullPath = "admin" + "/" + AdminEndpoints.AUTHENTICATE;
     const res = await this.$.get<T>(fullPath, headers);
     return res;
   }
 
   async retrieveById<T>(subEndpoint: AllowedSubEndpoints, id: string) {
-    const fullPath = subEndpoint + "/" + fillStringPlaceholders(Endpoints.GET_BY_ID, { id });
+    let path: string = "";
+
+    switch (subEndpoint) {
+      case "orders":
+        path = OrderEndpoints.GET_BY_ID;
+        break;
+      case "products":
+        path = ProductEndpoints.GET_BY_ID;
+        break;
+      case "stores":
+        path = StoreEndpoints.GET_BY_ID;
+        break;
+      case "admin":
+        path = AdminEndpoints.GET_BY_ID;
+        break;
+    }
+
+    const fullPath = subEndpoint + "/" + fillStringPlaceholders(path, { id });
     const res = await this.$.get<T>(fullPath);
     return res;
   }

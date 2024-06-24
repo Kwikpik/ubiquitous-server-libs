@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write **/**/*.{js,ts,json}",
+    "format": "prettier --ignore-path \"./.prettierignore\" --write **/**/*.{js,ts,json}",
     "build": "rm -rf dist && npx tsc"
   },
   "keywords": [
@@ -27,6 +27,7 @@
     "lodash": "^4.17.21",
     "nodemailer": "^6.9.13",
     "nodemailer-express-handlebars": "^6.1.2",
+    "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.20",
     "typescript": "^5.4.5"
   },
