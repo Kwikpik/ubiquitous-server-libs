@@ -108,4 +108,8 @@ export class SharedHTTPModule {
       };
     }
   }
+
+  public getHeaders() {
+    return this.axiosInstance.defaults.headers;
+  }
 }

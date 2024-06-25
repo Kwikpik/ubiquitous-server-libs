@@ -195,4 +195,4 @@ class PaystackPaymentModule {
  * @param secret Paystack secret key
  * @returns
  */
-export const initPaystackPayment = (secret?: string) => new PaystackPaymentModule(secret);
+export const initPaystackPaymentModule = (secret?: string) => new PaystackPaymentModule(secret);
