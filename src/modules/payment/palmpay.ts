@@ -1,5 +1,5 @@
 import { createHash, createSign } from "crypto";
-import { SharedHTTPModule } from "../../utils/http";
+import { HTTPModule } from "../../utils/http";
 import { generate } from "../../utils/generator";
 
 interface PalmpayConfig {
@@ -8,7 +8,7 @@ interface PalmpayConfig {
 }
 
 class PalmpayPaymentModule {
-  private $: SharedHTTPModule | null = null;
+  private $: HTTPModule | null = null;
 
   constructor(config: PalmpayConfig = { appId: "", environment: "production" }) {
     // Set default values
@@ -28,7 +28,7 @@ class PalmpayPaymentModule {
     headers["Content-Type"] = "application/json";
     headers.accept = "application/json";
 
-    this.$ = new SharedHTTPModule(url, headers);
+    this.$ = new HTTPModule(url, headers);
   }
 
   private composeSignature(requestBody: Record<string, any>, secret: string) {

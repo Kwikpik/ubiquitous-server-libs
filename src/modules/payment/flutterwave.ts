@@ -1,5 +1,5 @@
 import { generate } from "../../utils/generator";
-import { SharedHTTPModule } from "../../utils/http";
+import { HTTPModule } from "../../utils/http";
 import { fillStringPlaceholders } from "../../utils/mappers";
 import { FLUTTERWAVE_SECRET } from "../../variables";
 
@@ -12,7 +12,7 @@ interface GeneratePaymentLinkResponse {
 }
 
 class FlutterwavePaymentModule {
-  private $: SharedHTTPModule | null;
+  private $: HTTPModule | null;
 
   constructor(secret?: string) {
     const url = "https://api.flutterwave.com";
@@ -23,7 +23,7 @@ class FlutterwavePaymentModule {
     headers.authorization = authorization;
     headers["Content-Type"] = "application/json";
 
-    this.$ = new SharedHTTPModule(url, headers);
+    this.$ = new HTTPModule(url, headers);
   }
 
   static initializePaymentModule(secret?: string) {

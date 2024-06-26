@@ -1,7 +1,7 @@
 import isBase64 from "is-base64";
 import { FormData, File } from "formdata-node";
-import { HttpResponseTypes, ServiceNames } from "../constants";
-import { SharedHTTPModule } from "../utils/http";
+import { HttpResponseTypes } from "../constants";
+import { HTTPModule } from "../utils/http";
 import assert from "assert";
 import { randomUUID } from "crypto";
 import isNil from "lodash/isNil";
@@ -16,18 +16,24 @@ interface IPFSConfig {
    * If to use localhost instead of Docker environment
    */
   shouldUseLocalhost?: boolean;
+
+  /**
+   * Service name to connect with if not localhost
+   */
+  serviceName?: string;
 }
 
 class LocalIPFSInstance {
-  private $httpInstance: SharedHTTPModule;
+  private $httpInstance: HTTPModule;
 
-  constructor(opts: IPFSConfig = { port: 5001, shouldUseLocalhost: true }) {
+  constructor(opts: IPFSConfig = { port: 5001, shouldUseLocalhost: true, serviceName: "ipfs-service" }) {
     // Set default value;
     opts.port = opts.port ?? 5001;
     opts.shouldUseLocalhost = opts.shouldUseLocalhost ?? true;
+    opts.serviceName = opts.serviceName ?? "ipfs-service";
 
-    const baseURL = `http://${opts.shouldUseLocalhost ? "localhost" : ServiceNames.IPFS}:${opts.port}`;
-    this.$httpInstance = SharedHTTPModule.constructWithBaseURL(baseURL);
+    const baseURL = `http://${opts.shouldUseLocalhost ? "localhost" : opts.serviceName}:${opts.port}`;
+    this.$httpInstance = HTTPModule.constructWithBaseURL(baseURL);
   }
 
   static constructDefault() {

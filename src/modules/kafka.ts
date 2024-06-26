@@ -1,7 +1,5 @@
 import { Consumer, Kafka, Producer } from "kafkajs";
-import { AllowedKafkaTopics, ServiceNames } from "../constants";
 import isNil from "lodash/isNil";
-import assert from "assert";
 
 interface LocalKafkaInstanceOpts {
   /**
@@ -18,6 +16,16 @@ interface LocalKafkaInstanceOpts {
    * How long in seconds to wait for a successful connection. Defaults to 1s
    */
   connectTimeout?: number;
+
+  /**
+   * Whether to connect using localhost
+   */
+  shouldUseLocalhost?: boolean;
+
+  /**
+   * Service name to use in case localhost connection is disabled
+   */
+  serviceName?: string;
 }
 
 interface LocalKafkaProducerOpts {
@@ -47,13 +55,23 @@ class LocalKafkaInstance {
   private producer: Producer | null = null;
   private consumer: Consumer | null = null;
 
-  constructor(opts: LocalKafkaInstanceOpts = { clientId: "kwikpik", port: 9092, connectTimeout: 1 }) {
+  constructor(
+    opts: LocalKafkaInstanceOpts = {
+      clientId: "kwikpik",
+      port: 9092,
+      connectTimeout: 1,
+      serviceName: "kafka",
+      shouldUseLocalhost: true,
+    }
+  ) {
     // Set default values
     opts.clientId = opts.clientId ?? "kwikpik";
     opts.port = opts.port ?? 9092;
     opts.connectTimeout = opts.connectTimeout ?? 1;
+    opts.shouldUseLocalhost = opts.shouldUseLocalhost ?? true;
+    opts.serviceName = opts.serviceName ?? "kafka";
 
-    const brokers = ([] as string[]).concat(`${ServiceNames.KAFKA}:${opts.port}`);
+    const brokers = ([] as string[]).concat(`${opts.shouldUseLocalhost ? "localhost" : opts.serviceName}:${opts.port}`);
 
     this.K = new Kafka({ clientId: opts.clientId, brokers, connectionTimeout: opts.connectTimeout * 1000 });
   }
@@ -123,13 +141,7 @@ class LocalKafkaInstance {
    * @param message Message to send.
    * @param logSendResult Whether to log result.
    */
-  public produce(
-    topic: AllowedKafkaTopics,
-    message: Record<string, any> | Record<string, any>[],
-    logSendResult: boolean = false
-  ) {
-    assert.ok(Object.values(AllowedKafkaTopics).includes(topic), "invalid_topic");
-
+  public produce(topic: string, message: Record<string, any> | Record<string, any>[], logSendResult: boolean = false) {
     if (!isNil(this.producer))
       this.producer
         .send({
@@ -151,12 +163,10 @@ class LocalKafkaInstance {
   }
 
   public subscribe(opts: {
-    topic: AllowedKafkaTopics;
+    topic: string;
     numberOfConcurrentPartitions?: number;
     listener?: (value: Record<string, any>, topic?: string) => void | Promise<void>;
   }) {
-    assert.ok(Object.values(AllowedKafkaTopics).includes(opts.topic), "invalid_topic");
-
     opts.numberOfConcurrentPartitions = opts.numberOfConcurrentPartitions ?? 7;
 
     if (!isNil(this.consumer))

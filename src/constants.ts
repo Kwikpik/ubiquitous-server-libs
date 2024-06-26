@@ -1,31 +1,3 @@
-export enum ServiceNames {
-  AUTHENTICATION = "authentication-service",
-  MERCHANT = "merchant-service",
-  WALLET = "wallet-service",
-  MISC = "miscellaneous-service",
-  MONITORING = "monitoring-service",
-  LOGISTICS = "logistics-service",
-  ADMIN = "admin-service",
-  IPFS = "ipfs-service",
-  MAIN_DB = "db",
-  MONITORING_DB = "db-monitoring",
-  KAFKA = "kafka",
-}
-
-export enum AllowedKafkaTopics {
-  MERCHANT_ORDERS = "orders-to-merchants",
-  EVENT_MONITOR = "event-monitor",
-  WALLET_CREATION = "wallet-creation",
-  DISPATCH_ORDER = "dispatch-orders",
-  CANCELLED_MERCHANT_ORDERS = "cancelled-orders-to-merchants",
-  ACCEPTED_MERCHANT_ORDERS = "accepted-orders-to-merchants",
-  REQUEST_PAYMENTS = "payments-for-requests",
-  CANCELLED_DISPATCH_ORDERS = "cancelled-dispatch-orders",
-  CREDIT_RIDERS = "credit-riders",
-  REVENUE_INFO = "revenue-info",
-  WITHDRAWAL_REQUESTS = "withdrawal-requests",
-}
-
 export enum HttpResponseTypes {
   SUCCESS = "SUCCESS",
   FAILED = "FAILED",

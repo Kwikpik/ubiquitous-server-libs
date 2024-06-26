@@ -7,7 +7,7 @@ export interface ResponseInterface<T> {
   data: T;
 }
 
-export class SharedHTTPModule {
+export class HTTPModule {
   private axiosInstance: AxiosInstance;
 
   constructor(baseURL: string, headers?: Record<string, any>) {
@@ -18,7 +18,7 @@ export class SharedHTTPModule {
   }
 
   static constructWithBaseURL(baseURL: string) {
-    return new SharedHTTPModule(baseURL);
+    return new HTTPModule(baseURL);
   }
 
   public async post<S, T>(

@@ -1,4 +1,4 @@
-import { SharedHTTPModule } from "../../utils/http";
+import { HTTPModule } from "../../utils/http";
 import { PAYSTACK_SECRET } from "../../variables";
 import { generate } from "../../utils/generator";
 import { fillStringPlaceholders } from "../../utils/mappers";
@@ -39,7 +39,7 @@ interface CreateTransferRecipientResponse {
 }
 
 class PaystackPaymentModule {
-  private $: SharedHTTPModule | null = null;
+  private $: HTTPModule | null = null;
 
   constructor(secret?: string) {
     const url: string = "https://api.paystack.co";
@@ -50,7 +50,7 @@ class PaystackPaymentModule {
     headers.authorization = authorization;
     headers["Content-Type"] = "application/json";
 
-    this.$ = new SharedHTTPModule(url, headers);
+    this.$ = new HTTPModule(url, headers);
   }
 
   async generatePaymentLink(userId: string, amount: number, email: string, currency?: string) {
