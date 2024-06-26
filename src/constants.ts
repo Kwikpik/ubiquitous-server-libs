@@ -4,7 +4,8 @@ export enum ServiceNames {
   WALLET = "wallet-service",
   MISC = "miscellaneous-service",
   MONITORING = "monitoring-service",
-  DISPATCH = "dispatch-service",
+  LOGISTICS = "logistics-service",
+  ADMIN = "admin-service",
   IPFS = "ipfs-service",
   MAIN_DB = "db",
   MONITORING_DB = "db-monitoring",
@@ -12,9 +13,17 @@ export enum ServiceNames {
 }
 
 export enum AllowedKafkaTopics {
-  MERCHANT_ORDERING = "orders-to-merchant",
+  MERCHANT_ORDERS = "orders-to-merchants",
   EVENT_MONITOR = "event-monitor",
   WALLET_CREATION = "wallet-creation",
+  DISPATCH_ORDER = "dispatch-orders",
+  CANCELLED_MERCHANT_ORDERS = "cancelled-orders-to-merchants",
+  ACCEPTED_MERCHANT_ORDERS = "accepted-orders-to-merchants",
+  REQUEST_PAYMENTS = "payments-for-requests",
+  CANCELLED_DISPATCH_ORDERS = "cancelled-dispatch-orders",
+  CREDIT_RIDERS = "credit-riders",
+  REVENUE_INFO = "revenue-info",
+  WITHDRAWAL_REQUESTS = "withdrawal-requests",
 }
 
 export enum HttpResponseTypes {
@@ -41,4 +50,6 @@ export enum SMS {
   KYC_REJECTED = "Dear {user}, \n Your KYC documents were rejected. Please try again with the necessary documents, so that you can begin earning with Kwikpik.",
   WELCOME_MERCHANT = "Dear {user}, \n You have joined Kwikpik as a merchant. You can now participate in a streamlined delivery experience.",
   WELCOME_BUSINESS = "Dear {user}, \n You have joined Kwikpik as a business. You can now leverage our services in perfecting your delivery business.",
+  PASSWORD_CHANGE_OTP = "Dear {user}, \n You have requested to change your password, use the OTP - {code} - to change your password.",
+  PACKAGE_PROTECTION_CODE = "Dear {user}, \n Your package is now in transit. Send the code - {code} - to the recipient, and ask them to verify with the rider.",
 }

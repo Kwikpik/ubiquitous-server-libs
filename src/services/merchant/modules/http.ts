@@ -54,7 +54,7 @@ class HTTPModule {
 
     headers.authorization = `Bearer ${jwt}`;
 
-    const fullPath = "admin" + "/" + AdminEndpoints.AUTHENTICATE;
+    const fullPath = "/admin" + "/" + AdminEndpoints.AUTHENTICATE;
     const res = await this.$.get<T>(fullPath, headers);
     return res;
   }
@@ -77,7 +77,7 @@ class HTTPModule {
         break;
     }
 
-    const fullPath = subEndpoint + "/" + fillStringPlaceholders(path, { id });
+    const fullPath = "/" + subEndpoint + "/" + fillStringPlaceholders(path, { id });
     const res = await this.$.get<T>(fullPath);
     return res;
   }

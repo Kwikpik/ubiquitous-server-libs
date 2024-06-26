@@ -83,8 +83,8 @@ class PalmpayPaymentModule {
 }
 
 /**
- * 
+ *
  * @param opts Palmpay configuration. {@link PalmpayConfig | See Implementation}.
- * @returns 
+ * @returns
  */
 export const initializePalmpayPaymentModule = (opts?: PalmpayConfig) => new PalmpayPaymentModule(opts);

@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --ignore-path \"./.prettierignore\" --write **/**/*.{js,ts,json}",
-    "build": "rm -rf dist && npx tsc"
+    "build": "rm -rf dist && npx tsc && cpx ./src/modules/mail/templates/**/* ./dist/modules/mail/templates --clean"
   },
   "keywords": [
     "kwikpik",
@@ -29,14 +29,17 @@
     "nodemailer-express-handlebars": "^6.1.2",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.20",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@types/is-base64": "^1.1.3",
     "@types/joi": "^17.2.3",
     "@types/lodash": "^4.17.4",
     "@types/node": "^20.14.2",
-    "@types/nodemailer-express-handlebars": "^4.0.5"
+    "@types/nodemailer-express-handlebars": "^4.0.5",
+    "@types/web-push": "^3.6.3",
+    "cpx": "^1.5.0"
   },
   "files": [
     "dist",
