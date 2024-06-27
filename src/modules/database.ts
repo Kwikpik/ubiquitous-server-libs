@@ -96,7 +96,7 @@ class LocalDataSource {
       entities: opts.entities,
       subscribers: opts.subscribers,
       logging: opts.log,
-      namingStrategy: new SnakeNamingStrategy()
+      namingStrategy: new SnakeNamingStrategy(),
     };
 
     // Set datasource
