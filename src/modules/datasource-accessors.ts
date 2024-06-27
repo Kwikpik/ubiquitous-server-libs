@@ -52,7 +52,7 @@ class LocalDataSourceAccessor<T extends ObjectLiteral> {
   async readEntity(
     where: FindOptionsWhere<T> | FindOptionsWhere<T>[],
     relations?: FindOptionsRelations<T>
-  ): Promise<OperationResponse<ObjectLiteral | null>> {
+  ): Promise<OperationResponse<T | null>> {
     this.checkTargetAndDataSource();
     try {
       const data = await this.DS!.querySingleEntity(this.target!, where, relations);
@@ -68,7 +68,7 @@ class LocalDataSourceAccessor<T extends ObjectLiteral> {
     relations?: FindOptionsRelations<T>,
     skip: number = 0,
     take?: number
-  ): Promise<OperationResponse<ObjectLiteral[]>> {
+  ): Promise<OperationResponse<T[]>> {
     this.checkTargetAndDataSource();
     try {
       const data = await this.DS!.queryManyEntities(this.target!, where, order, relations, skip, take);
