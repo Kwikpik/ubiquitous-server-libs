@@ -2,7 +2,6 @@ import {
   DataSource,
   type MixedList,
   type DataSourceOptions,
-  type ObjectLiteral,
   type EntityTarget,
   type FindOptionsWhere,
   type FindOptionsOrder,
@@ -11,6 +10,7 @@ import {
 } from "typeorm";
 import { join } from "path";
 import { ExcludeFuctionsMapper, OptionalKeysMapper } from "../utils/mappers";
+import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
 interface LocalDataSourceOpts {
   /**
@@ -96,6 +96,7 @@ class LocalDataSource {
       entities: opts.entities,
       subscribers: opts.subscribers,
       logging: opts.log,
+      namingStrategy: new SnakeNamingStrategy()
     };
 
     // Set datasource
