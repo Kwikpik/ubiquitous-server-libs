@@ -74,4 +74,29 @@ class SMSModule {
       throw error;
     }
   }
+
+  async sendChangePasswordMessage(to: string | string[], code: string, user?: string) {
+    try {
+      const msg = await send(to, fillStringPlaceholders(SMS.PASSWORD_CHANGE_OTP, { user, code }));
+      return msg;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
+  async sendPackageProtectionCode(to: string | string[], code: string, user?: string) {
+    try {
+      const msg = await send(to, fillStringPlaceholders(SMS.PACKAGE_PROTECTION_CODE, { user, code }));
+      return msg;
+    } catch (error: any) {
+      throw error;
+    }
+  }
 }
+
+/**
+ *
+ * @param apiKey API key.
+ * @returns
+ */
+export const initializeSMSModule = (apiKey?: string) => SMSModule.initializeSMSModule(apiKey);

@@ -1,4 +1,4 @@
-import { SharedHTTPModule } from "../../utils/http";
+import { HTTPModule } from "../../utils/http";
 import { PAYSTACK_SECRET } from "../../variables";
 import { generate } from "../../utils/generator";
 import { fillStringPlaceholders } from "../../utils/mappers";
@@ -39,7 +39,7 @@ interface CreateTransferRecipientResponse {
 }
 
 class PaystackPaymentModule {
-  private $: SharedHTTPModule | null = null;
+  private $: HTTPModule | null = null;
 
   constructor(secret?: string) {
     const url: string = "https://api.paystack.co";
@@ -50,10 +50,16 @@ class PaystackPaymentModule {
     headers.authorization = authorization;
     headers["Content-Type"] = "application/json";
 
-    this.$ = new SharedHTTPModule(url, headers);
+    this.$ = new HTTPModule(url, headers);
   }
 
-  async generatePaymentLink(userId: string, amount: number, email: string, currency?: string) {
+  async generatePaymentLink(
+    userId: string,
+    amount: number,
+    email: string,
+    currency?: string,
+    customerRequest?: Record<string, any>
+  ) {
     const body: Record<string, any> = {};
 
     body.amount = (amount * 100).toString();
@@ -70,7 +76,7 @@ class PaystackPaymentModule {
     const metadata: Record<string, any> = {};
 
     metadata.userId = userId;
-    metadata.shouldPropagateImmediately = true;
+    metadata.customerRequest = customerRequest;
 
     try {
       const res = await this.$.post<any, GeneratePaymentLinkResponse>("/transaction/initialize", body);
@@ -195,4 +201,4 @@ class PaystackPaymentModule {
  * @param secret Paystack secret key
  * @returns
  */
-export const initPaystackPayment = (secret?: string) => new PaystackPaymentModule(secret);
+export const initPaystackPaymentModule = (secret?: string) => new PaystackPaymentModule(secret);

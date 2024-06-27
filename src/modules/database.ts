@@ -9,15 +9,10 @@ import {
   type FindOptionsRelations,
   type EntitySchema,
 } from "typeorm";
-import { ServiceNames } from "../constants";
 import { join } from "path";
 import { ExcludeFuctionsMapper, OptionalKeysMapper } from "../utils/mappers";
 
 interface LocalDataSourceOpts {
-  /**
-   * Which database server to use for connection.
-   */
-  whichDBServer?: "main" | "monitoring";
   /**
    * Port number. Defaults to 5432.
    */
@@ -57,6 +52,11 @@ interface LocalDataSourceOpts {
    * Whether to use localhost instead of Docker environment
    */
   shouldUseLocalhost?: boolean;
+
+  /**
+   * Docker service name if localhost is disabled
+   */
+  serviceName?: string;
 }
 
 class LocalDataSource {
@@ -64,19 +64,18 @@ class LocalDataSource {
 
   constructor(
     opts: LocalDataSourceOpts = {
-      whichDBServer: "main",
       port: 5432,
       username: "postgres",
       password: "postgres",
       databaseName: "kwikpik_db",
       shouldUseLocalhost: true,
+      serviceName: "db",
     }
   ) {
     // Set default values;
     opts.username = opts.username ?? "postgres";
     opts.port = opts.port ?? 5432;
     opts.password = opts.password ?? "postgres";
-    opts.whichDBServer = opts.whichDBServer ?? "main";
     opts.databaseName = opts.databaseName ?? "kwikpik_db";
     opts.migrations = opts.migrations ?? ([] as string[]).concat(join(__dirname, "/migrations/*.{ts,js}"));
     opts.entities =
@@ -85,13 +84,10 @@ class LocalDataSource {
     opts.subscribers = opts.subscribers ?? ([] as string[]).concat(join(__dirname, "/subscribers/*.{ts,js}"));
     opts.log = opts.log ?? false;
     opts.shouldUseLocalhost = opts.shouldUseLocalhost ?? true;
+    opts.serviceName = opts.serviceName ?? "db";
 
     const url = `postgres://${opts.username}:${opts.password}@${
-      opts.shouldUseLocalhost
-        ? "localhost"
-        : opts.whichDBServer === "main"
-        ? ServiceNames.MAIN_DB
-        : ServiceNames.MONITORING_DB
+      opts.shouldUseLocalhost ? "localhost" : opts.serviceName
     }:${opts.port}/${opts.databaseName}`;
     const opt: DataSourceOptions = {
       url,
@@ -106,12 +102,8 @@ class LocalDataSource {
     this.DS = new DataSource(opt);
   }
 
-  static constructDefaultMainDS() {
+  static constructDataSource() {
     return new LocalDataSource();
-  }
-
-  static constructDefaultMonitoringDS() {
-    return new LocalDataSource({ whichDBServer: "monitoring" });
   }
 
   /**
@@ -225,15 +217,10 @@ class LocalDataSource {
 }
 
 /**
- * Construct main datasource object with default options.
+ * Construct datasource object with default options.
  *
  */
-export const initializeMainDSWithDefaultOptions = () => LocalDataSource.constructDefaultMainDS();
-
-/**
- * Construct monitoring datasource object with default options.
- */
-export const initializeMonitoringDSWithDefaultOptions = () => LocalDataSource.constructDefaultMonitoringDS();
+export const initializeDSWithDefaultOptions = () => LocalDataSource.constructDataSource();
 
 /**
  *  Construct datasource object.
@@ -242,31 +229,13 @@ export const initializeMonitoringDSWithDefaultOptions = () => LocalDataSource.co
 export const initializeDS = (opts?: LocalDataSourceOpts) => new LocalDataSource(opts);
 
 /**
- * Construct main datasource object with default options, and connect immediately.
+ * Construct datasource object with default options, and connect immediately.
  * @param silenceInfoLogs Don't log connection info.
  * @returns
  */
-export const initializeConnectedMainDSWithDefaultOptions = (silenceInfoLogs?: boolean) => {
+export const initializeConnectedDSWithDefaultOptions = (silenceInfoLogs?: boolean) => {
   try {
-    const DS = LocalDataSource.constructDefaultMainDS();
-
-    // Connect
-    DS.connect(silenceInfoLogs);
-
-    return DS;
-  } catch (error: any) {
-    console.error("an error occured while connecting. error message - %s", error.message);
-    return null;
-  }
-};
-
-/**
- * Construct monitoring datasource object with default options, and connect immediately.
- * @param silenceInfoLogs Don't log connection info.
- */
-export const initializeConnectedMonitoringDSWithDefaultOptions = (silenceInfoLogs?: boolean) => {
-  try {
-    const DS = LocalDataSource.constructDefaultMonitoringDS();
+    const DS = LocalDataSource.constructDataSource();
 
     // Connect
     DS.connect(silenceInfoLogs);

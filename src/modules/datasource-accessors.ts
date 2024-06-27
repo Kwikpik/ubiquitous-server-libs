@@ -7,11 +7,7 @@ import {
   type FindOptionsOrder,
   type DeleteResult,
 } from "typeorm";
-import {
-  LocalDataSourceType,
-  initializeMainDSWithDefaultOptions,
-  initializeMonitoringDSWithDefaultOptions,
-} from "./database";
+import { LocalDataSourceType, initializeDSWithDefaultOptions } from "./database";
 import assert from "assert";
 import isNil from "lodash/isNil";
 import { ExcludeFuctionsMapper, OptionalKeysMapper } from "../utils/mappers";
@@ -32,13 +28,8 @@ class LocalDataSourceAccessor<T extends EntityTarget<ObjectLiteral>> {
   }
 
   static constructMainDefault<S extends EntityTarget<ObjectLiteral>>(trgt: S) {
-    const defaultDS = initializeMainDSWithDefaultOptions();
+    const defaultDS = initializeDSWithDefaultOptions();
     return new LocalDataSourceAccessor<S>(defaultDS, trgt);
-  }
-
-  static constructMonitoringDefault<S extends EntityTarget<ObjectLiteral>>(trgt: S) {
-    const defaultMonitoringDS = initializeMonitoringDSWithDefaultOptions();
-    return new LocalDataSourceAccessor<S>(defaultMonitoringDS, trgt);
   }
 
   private checkTargetAndDataSource() {
@@ -145,13 +136,5 @@ export const initializeDataSourceAccessor = <T extends EntityTarget<ObjectLitera
  * @param target Target entity.
  * @returns
  */
-export const initializeMainDataSourceAccessorDefault = <T extends EntityTarget<ObjectLiteral>>(target: T) =>
+export const initializeDataSourceAccessorDefault = <T extends EntityTarget<ObjectLiteral>>(target: T) =>
   LocalDataSourceAccessor.constructMainDefault(target);
-
-/**
- * Initialize monitoring datasource accessor using datasource with default options.
- * @param target Target entity.
- * @returns
- */
-export const initializeMonitoringDataSourceAccessorDefault = <T extends EntityTarget<ObjectLiteral>>(target: T) =>
-  LocalDataSourceAccessor.constructMonitoringDefault(target);
