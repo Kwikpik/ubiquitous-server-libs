@@ -1,5 +1,5 @@
 /**
- * Calculate straight line distance between two geographical points.
+ * Calculate straight line distance (in KM) between two geographical points.
  *
  * @param latitude0 Latitude of first point.
  * @param longitude0 Longitude of first point.
@@ -7,7 +7,7 @@
  * @param longitude1 Longitude of second point.
  * @returns
  */
-export const calculateDistanceUsingCoordinates = (
+export const calculateDistanceInKMUsingCoordinates = (
   latitude0: number,
   longitude0: number,
   latitude1: number,

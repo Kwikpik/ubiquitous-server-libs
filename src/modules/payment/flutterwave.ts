@@ -76,7 +76,8 @@ class FlutterwavePaymentModule {
     redirectUrl: string,
     customerEmail: string,
     customerName: string,
-    customerPhoneNumber: string
+    customerPhoneNumber: string,
+    customerRequest?: Record<string, any>
   ) {
     const body: Record<string, any> = {};
 
@@ -100,7 +101,7 @@ class FlutterwavePaymentModule {
     const meta: Record<string, any> = {};
 
     meta.userId = userId;
-    meta.shouldPropagateImmediately = true;
+    meta.customerRequest = customerRequest;
 
     body.customer = customer;
     body.meta = meta;

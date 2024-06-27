@@ -8,3 +8,4 @@ export const NM_PASSWORD = process.env.NM_PASSWORD;
 export const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET;
 export const PALMPAY_APP_ID = process.env.PALMPAY_APP_ID;
 export const FLUTTERWAVE_SECRET = process.env.FLUTTERWAVE_SECRET;
+export const THE_PEER_SECRET = process.env.THE_PEER_SECRET;

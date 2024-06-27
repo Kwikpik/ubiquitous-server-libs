@@ -53,7 +53,13 @@ class PaystackPaymentModule {
     this.$ = new HTTPModule(url, headers);
   }
 
-  async generatePaymentLink(userId: string, amount: number, email: string, currency?: string) {
+  async generatePaymentLink(
+    userId: string,
+    amount: number,
+    email: string,
+    currency?: string,
+    customerRequest?: Record<string, any>
+  ) {
     const body: Record<string, any> = {};
 
     body.amount = (amount * 100).toString();
@@ -70,7 +76,7 @@ class PaystackPaymentModule {
     const metadata: Record<string, any> = {};
 
     metadata.userId = userId;
-    metadata.shouldPropagateImmediately = true;
+    metadata.customerRequest = customerRequest;
 
     try {
       const res = await this.$.post<any, GeneratePaymentLinkResponse>("/transaction/initialize", body);
