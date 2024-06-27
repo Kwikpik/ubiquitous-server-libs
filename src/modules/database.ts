@@ -141,17 +141,17 @@ class LocalDataSource {
     return this.DS.isInitialized;
   }
 
-  public async insertEntity<T extends EntityTarget<ObjectLiteral>>(target: T, values: ExcludeFuctionsMapper<T>) {
+  public async insertEntity<T>(target: EntityTarget<T>, values: ExcludeFuctionsMapper<T>) {
     try {
-      const value = await this.DS.getRepository(target).save(values);
+      const value = await this.DS.getRepository(target).save(this.DS.getRepository(target).create(values));
       return value;
     } catch (error) {
       throw error;
     }
   }
 
-  public async querySingleEntity<T extends EntityTarget<ObjectLiteral>>(
-    target: T,
+  public async querySingleEntity<T>(
+    target: EntityTarget<T>,
     where: FindOptionsWhere<T> | FindOptionsWhere<T>[],
     relations?: FindOptionsRelations<T>
   ) {
@@ -163,8 +163,8 @@ class LocalDataSource {
     }
   }
 
-  public async queryManyEntities<T extends EntityTarget<ObjectLiteral>>(
-    target: T,
+  public async queryManyEntities<T>(
+    target: EntityTarget<T>,
     where?: FindOptionsWhere<T> | FindOptionsWhere<T>[],
     order?: FindOptionsOrder<T>,
     relations?: FindOptionsRelations<T>,
@@ -179,7 +179,7 @@ class LocalDataSource {
     }
   }
 
-  public async updateEntity<T extends EntityTarget<ObjectLiteral>>(target: T, values: OptionalKeysMapper<T>) {
+  public async updateEntity<T>(target: EntityTarget<T>, values: ExcludeFuctionsMapper<OptionalKeysMapper<T>>) {
     try {
       const value = await this.DS.getRepository(target).save(values);
       return value;
@@ -188,7 +188,7 @@ class LocalDataSource {
     }
   }
 
-  public async deleteEntity<T extends EntityTarget<ObjectLiteral>>(target: T, where: FindOptionsWhere<T>) {
+  public async deleteEntity<T>(target: EntityTarget<T>, where: FindOptionsWhere<T>) {
     try {
       const result = await this.DS.getRepository(target).delete(where);
       return result;
@@ -197,7 +197,7 @@ class LocalDataSource {
     }
   }
 
-  public async entityExists<T extends EntityTarget<ObjectLiteral>>(target: T, where: FindOptionsWhere<T>) {
+  public async entityExists<T>(target: EntityTarget<T>, where: FindOptionsWhere<T>) {
     try {
       const value = await this.DS.getRepository(target).existsBy(where);
       return value;
@@ -206,7 +206,7 @@ class LocalDataSource {
     }
   }
 
-  public async countEntities<T extends EntityTarget<ObjectLiteral>>(target: T, where?: FindOptionsWhere<T>) {
+  public async countEntities<T>(target: EntityTarget<T>, where?: FindOptionsWhere<T>) {
     try {
       const value = await this.DS.getRepository(target).count({ where });
       return value;

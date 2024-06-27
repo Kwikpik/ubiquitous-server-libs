@@ -1,11 +1,10 @@
-import "reflect-metadata";
 import {
   type FindOptionsWhere,
-  type EntityTarget,
   type ObjectLiteral,
   type FindOptionsRelations,
   type FindOptionsOrder,
   type DeleteResult,
+  EntityTarget,
 } from "typeorm";
 import { LocalDataSourceType, initializeDSWithDefaultOptions } from "./database";
 import assert from "assert";
@@ -18,16 +17,16 @@ interface OperationResponse<T> {
   error?: any;
 }
 
-class LocalDataSourceAccessor<T extends EntityTarget<ObjectLiteral>> {
-  target?: T;
+class LocalDataSourceAccessor<T extends ObjectLiteral> {
+  target?: EntityTarget<T>;
   DS?: LocalDataSourceType;
 
-  constructor(DS: LocalDataSourceType, trgt: T) {
+  constructor(DS: LocalDataSourceType, trgt: EntityTarget<T>) {
     this.target = trgt;
     this.DS = DS;
   }
 
-  static constructMainDefault<S extends EntityTarget<ObjectLiteral>>(trgt: S) {
+  static constructMainDefault<S extends ObjectLiteral>(trgt: EntityTarget<S>) {
     const defaultDS = initializeDSWithDefaultOptions();
     return new LocalDataSourceAccessor<S>(defaultDS, trgt);
   }
@@ -126,9 +125,9 @@ class LocalDataSourceAccessor<T extends EntityTarget<ObjectLiteral>> {
  * @param target Target entity.
  * @returns
  */
-export const initializeDataSourceAccessor = <T extends EntityTarget<ObjectLiteral>>(
+export const initializeDataSourceAccessor = <T extends ObjectLiteral>(
   DS: LocalDataSourceType,
-  target: T
+  target: EntityTarget<T>
 ) => new LocalDataSourceAccessor<T>(DS, target);
 
 /**
@@ -136,5 +135,5 @@ export const initializeDataSourceAccessor = <T extends EntityTarget<ObjectLitera
  * @param target Target entity.
  * @returns
  */
-export const initializeDataSourceAccessorDefault = <T extends EntityTarget<ObjectLiteral>>(target: T) =>
+export const initializeDataSourceAccessorDefault = <T extends ObjectLiteral>(target: EntityTarget<T>) =>
   LocalDataSourceAccessor.constructMainDefault(target);
