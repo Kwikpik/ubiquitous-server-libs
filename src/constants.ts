@@ -26,3 +26,12 @@ export enum SMS {
   PHONE_NUMBER_CHANGE_OTP = "Dear {user}, \n You have requested to change your phone number, use the OTP - {code} - to change your phone number.",
   PACKAGE_PROTECTION_CODE = "Dear {user}, \n Your package is now in transit. Send the code - {code} - to the recipient, and ask them to verify with the rider.",
 }
+
+export enum Vehicles {
+  CAR = "car",
+  MOTORCYCLE = "motorcycle",
+  BICYCLE = "bicycle",
+  BUS = "bus",
+  MINI_TRUCK = "mini_truck",
+  HEAVY_TRUCK = "heavy_truck"
+}
