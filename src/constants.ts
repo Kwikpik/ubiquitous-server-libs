@@ -23,5 +23,15 @@ export enum SMS {
   WELCOME_MERCHANT = "Dear {user}, \n You have joined Kwikpik as a merchant. You can now participate in a streamlined delivery experience.",
   WELCOME_BUSINESS = "Dear {user}, \n You have joined Kwikpik as a business. You can now leverage our services in perfecting your delivery business.",
   PASSWORD_CHANGE_OTP = "Dear {user}, \n You have requested to change your password, use the OTP - {code} - to change your password.",
+  PHONE_NUMBER_CHANGE_OTP = "Dear {user}, \n You have requested to change your phone number, use the OTP - {code} - to change your phone number.",
   PACKAGE_PROTECTION_CODE = "Dear {user}, \n Your package is now in transit. Send the code - {code} - to the recipient, and ask them to verify with the rider.",
+}
+
+export enum Vehicles {
+  CAR = "car",
+  MOTORCYCLE = "motorcycle",
+  BICYCLE = "bicycle",
+  BUS = "bus",
+  MINI_TRUCK = "mini_truck",
+  HEAVY_TRUCK = "heavy_truck"
 }

@@ -45,20 +45,20 @@ class LocalDataSourceAccessor<T extends ObjectLiteral> {
       const data = await this.DS!.insertEntity(this.target!, value);
       return { responseType: "success" as "success" | "failure", data, error: undefined };
     } catch (error: any) {
-      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.messge };
+      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.message };
     }
   }
 
   async readEntity(
     where: FindOptionsWhere<T> | FindOptionsWhere<T>[],
     relations?: FindOptionsRelations<T>
-  ): Promise<OperationResponse<ObjectLiteral | null>> {
+  ): Promise<OperationResponse<T | null>> {
     this.checkTargetAndDataSource();
     try {
       const data = await this.DS!.querySingleEntity(this.target!, where, relations);
       return { responseType: "success" as "success" | "failure", data, error: undefined };
     } catch (error: any) {
-      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.messge };
+      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.message };
     }
   }
 
@@ -68,13 +68,13 @@ class LocalDataSourceAccessor<T extends ObjectLiteral> {
     relations?: FindOptionsRelations<T>,
     skip: number = 0,
     take?: number
-  ): Promise<OperationResponse<ObjectLiteral[]>> {
+  ): Promise<OperationResponse<T[]>> {
     this.checkTargetAndDataSource();
     try {
       const data = await this.DS!.queryManyEntities(this.target!, where, order, relations, skip, take);
       return { responseType: "success" as "success" | "failure", data, error: undefined };
     } catch (error: any) {
-      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.messge };
+      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.message };
     }
   }
 
@@ -84,7 +84,7 @@ class LocalDataSourceAccessor<T extends ObjectLiteral> {
       const data = await this.DS!.updateEntity(this.target!, values);
       return { responseType: "success" as "success" | "failure", data, error: undefined };
     } catch (error: any) {
-      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.messge };
+      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.message };
     }
   }
 
@@ -94,7 +94,7 @@ class LocalDataSourceAccessor<T extends ObjectLiteral> {
       const data = await this.DS!.deleteEntity(this.target!, where);
       return { responseType: "success" as "success" | "failure", data, error: undefined };
     } catch (error: any) {
-      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.messge };
+      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.message };
     }
   }
 
@@ -104,7 +104,7 @@ class LocalDataSourceAccessor<T extends ObjectLiteral> {
       const data = await this.DS!.entityExists(this.target!, where);
       return { responseType: "success" as "success" | "failure", data, error: undefined };
     } catch (error: any) {
-      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.messge };
+      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.message };
     }
   }
 
@@ -114,7 +114,7 @@ class LocalDataSourceAccessor<T extends ObjectLiteral> {
       const data = await this.DS!.countEntities(this.target!, where);
       return { responseType: "success" as "success" | "failure", data, error: undefined };
     } catch (error: any) {
-      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.messge };
+      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.message };
     }
   }
 }

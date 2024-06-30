@@ -84,6 +84,15 @@ class SMSModule {
     }
   }
 
+  async sendChangePhoneNumberMessage(to: string | string[], code: string, user?: string) {
+    try {
+      const msg = await send(to, fillStringPlaceholders(SMS.PHONE_NUMBER_CHANGE_OTP, { user, code }));
+      return msg;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
   async sendPackageProtectionCode(to: string | string[], code: string, user?: string) {
     try {
       const msg = await send(to, fillStringPlaceholders(SMS.PACKAGE_PROTECTION_CODE, { user, code }));
