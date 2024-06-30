@@ -123,12 +123,44 @@ class LocalKafkaInstance {
    *
    * @param silenceInfoLogs Don't log connection info.
    */
+  public disconnectProducer(silenceInfoLogs?: boolean) {
+    if (!isNil(this.producer))
+      this.producer
+        .disconnect()
+        .then(() => {
+          if (!silenceInfoLogs) console.info("kafka producer disconnected");
+        })
+        .catch(error => {
+          throw error;
+        });
+  }
+
+  /**
+   *
+   * @param silenceInfoLogs Don't log connection info.
+   */
   public connectConsumer(silenceInfoLogs?: boolean) {
     if (!isNil(this.consumer))
       this.consumer
         .connect()
         .then(() => {
           if (!silenceInfoLogs) console.info("kafka consumer connected");
+        })
+        .catch(error => {
+          throw error;
+        });
+  }
+
+  /**
+   *
+   * @param silenceInfoLogs Don't log connection info.
+   */
+  public disconnectConsumer(silenceInfoLogs?: boolean) {
+    if (!isNil(this.consumer))
+      this.consumer
+        .connect()
+        .then(() => {
+          if (!silenceInfoLogs) console.info("kafka consumer disconnected");
         })
         .catch(error => {
           throw error;
