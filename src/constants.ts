@@ -33,5 +33,5 @@ export enum Vehicles {
   BICYCLE = "bicycle",
   BUS = "bus",
   MINI_TRUCK = "mini_truck",
-  HEAVY_TRUCK = "heavy_truck"
+  HEAVY_TRUCK = "heavy_truck",
 }
