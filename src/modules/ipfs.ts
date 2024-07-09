@@ -64,7 +64,7 @@ class LocalIPFSInstance {
     if (ipfsResponse.responseType === HttpResponseTypes.FAILED) {
       return Promise.reject(new Error(ipfsResponse.data));
     }
-    const response: string[] = ipfsResponse.data.split("/");
+    const response: string[] = ipfsResponse.data.split("\n");
     const hash = response
       .filter(str_1 => str_1.trim().length > 0)
       .map(str_2 => JSON.parse(str_2))
