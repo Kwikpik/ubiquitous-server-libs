@@ -45,7 +45,7 @@ export class HTTPModule {
     params?: Record<string, any>
   ): Promise<ResponseInterface<T> | ResponseInterface<string>> {
     try {
-      const res = await this.axiosInstance.post<T>(path, { headers, params });
+      const res = await this.axiosInstance.get<T>(path, { headers, params });
       return { statusCode: res.status, responseType: HttpResponseTypes.SUCCESS, data: res.data };
     } catch (error: any) {
       return {
