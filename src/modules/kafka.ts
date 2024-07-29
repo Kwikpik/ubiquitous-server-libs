@@ -55,6 +55,9 @@ class LocalKafkaInstance {
   private producer: Producer | null = null;
   private consumer: Consumer | null = null;
 
+  private topicsToHandlersMap: Map<string, (value: Record<string, any>, topic?: string) => void | Promise<void>> =
+    new Map<string, (value: Record<string, any>, topic?: string) => void | Promise<void>>();
+
   constructor(
     opts: LocalKafkaInstanceOpts = {
       clientId: "kwikpik",
@@ -196,28 +199,31 @@ class LocalKafkaInstance {
 
   public subscribe(opts: {
     topic: string;
-    numberOfConcurrentPartitions?: number;
     listener?: (value: Record<string, any>, topic?: string) => void | Promise<void>;
   }) {
-    opts.numberOfConcurrentPartitions = opts.numberOfConcurrentPartitions ?? 7;
+    this.topicsToHandlersMap.set(opts.topic, opts.listener);
+  }
 
+  public invokeSubscriptions(numberOfConcurrentPartitions: number = 7) {
     if (!isNil(this.consumer))
       this.consumer
-        .subscribe({ topic: opts.topic })
+        .subscribe({ topics: Array.from(this.topicsToHandlersMap.keys()) })
         .then(() =>
-          this.consumer!.run({
-            partitionsConsumedConcurrently: opts.numberOfConcurrentPartitions,
+          this.consumer.run({
+            partitionsConsumedConcurrently: numberOfConcurrentPartitions,
             eachMessage: async ({ message, topic }) => {
-              if (!isNil(opts.listener))
+              const listener = this.topicsToHandlersMap.get(topic);
+
+              if (!isNil(listener))
                 if (!isNil(message.value)) {
                   const parsedMessage = JSON.parse(message.value.toString());
-                  opts.listener(parsedMessage, topic);
+                  listener(parsedMessage, topic);
                 }
             },
           })
         )
         .catch(error => {
-          console.info("an error occured while subscribing to %s \n", opts.topic);
+          console.info("an error occured during subscription");
           console.error(error);
         });
   }
