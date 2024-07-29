@@ -9,6 +9,7 @@ interface PalmpayConfig {
 
 class PalmpayPaymentModule {
   private $: HTTPModule | null = null;
+  private mutableHeaders: Record<string, any>;
 
   constructor(config: PalmpayConfig = { appId: "", environment: "production" }) {
     // Set default values
@@ -27,6 +28,7 @@ class PalmpayPaymentModule {
     headers.CountryCode = "NGN";
     headers["Content-Type"] = "application/json";
     headers.accept = "application/json";
+    this.mutableHeaders = headers;
 
     this.$ = new HTTPModule(url, headers);
   }
@@ -65,10 +67,8 @@ class PalmpayPaymentModule {
     body.email = email;
     body.customerName = customerName;
 
-    const defaultHeaders = this.$.getHeaders();
-
-    for (const key of Object.keys(defaultHeaders)) {
-      headers[key] = defaultHeaders[key];
+    for (const key of Object.keys(this.mutableHeaders)) {
+      headers[key] = this.mutableHeaders[key];
     }
 
     headers.Signature = this.composeSignature(body, secret);
