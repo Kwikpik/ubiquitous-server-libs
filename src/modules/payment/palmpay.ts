@@ -25,7 +25,7 @@ class PalmpayPaymentModule {
     const headers: Record<string, any> = {};
 
     headers.authorization = authorization;
-    headers.CountryCode = "NGN";
+    headers.countryCode = "NG";
     headers["Content-Type"] = "application/json";
     headers.accept = "application/json";
     this.mutableHeaders = headers;
