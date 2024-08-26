@@ -5,4 +5,4 @@ export * as datasourceAccessors from "./datasource-accessors";
 export * as mail from "./mail";
 export * as payment from "./payment";
 export * as sms from "./sms";
-export * as webpush from "./web-push";
+export * as pn from "./push-notification";
