@@ -150,7 +150,7 @@ class LocalPNInstance {
     }
 
     deletePNSubscription(subId: string) {
-      return this.$pnApi.deleteSubscription(this.appId, subId);
+        return this.$pnApi.deleteSubscription(this.appId, subId);
     }
 
     async createPN(
