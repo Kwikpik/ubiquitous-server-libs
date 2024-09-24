@@ -144,17 +144,11 @@ class NombaPaymentModule {
         }
     }
 
-    async createVirtualAccount(accountRef: string, accountName: string, currency: string = "NGN") {
+    async createVirtualAccount(accountRef: string, accountName: string) {
         const body: Record<string, any> = {};
 
         body.accoutRef = accountRef;
         body.accountName = accountName;
-        body.currency = currency;
-
-        const TWENTY_FIVE_YEARS = Date.now() + 788400000000;
-        const dateString = new Date(TWENTY_FIVE_YEARS).toISOString();
-
-        body.expiryDate = dateString;
 
         try {
             const accessTokenResp = await this.obtainAccessToken();

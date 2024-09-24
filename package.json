@@ -1,6 +1,6 @@
 {
     "name": "@kwikpik/server-libs",
-    "version": "1.5.0",
+    "version": "1.5.1",
     "main": "dist/index.js",
     "scripts": {
         "test": "jest",
