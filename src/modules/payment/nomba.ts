@@ -57,6 +57,37 @@ interface BankTransferResponse extends BaseResponse {
     };
 }
 
+interface GetTransactionByRefResponse extends BaseResponse {
+    data: {
+        id: string;
+        status: string;
+        amount: string;
+        fixedCharge: string;
+        source: string;
+        type: string;
+        customerBillerId: string;
+        timeCreated: string;
+        timeUpdated: string;
+        walletCurrency: string;
+        walletBalance: string;
+        billingVendorReference: string;
+        paymentVendorReference: string;
+        userId: string;
+        ktaSenderName: string;
+        ktaSenderAccountNumber: string;
+        ktaSenderBankCode: string;
+        senderName: string;
+        bankCode: string;
+        productId: string;
+        isAgentTransaction: boolean;
+        isInternational: boolean;
+        customerCommission: number;
+        sessionId: string;
+        accountNumber: string;
+        bankName: string;
+    };
+}
+
 class NombaPaymentModule {
     private $: HTTPModule | null = null;
     private clientId: string = "";
@@ -140,6 +171,57 @@ class NombaPaymentModule {
             if (typeof resp.data === "string") throw new Error(resp.data);
 
             return resp.data as CreateVirtualAccountResponse;
+        } catch (error: any) {
+            return Promise.reject(error);
+        }
+    }
+
+    async getTransactionOnParentAccountUsingReference(txRef: string) {
+        try {
+            const accessTokenResp = await this.obtainAccessToken();
+
+            const headers: Record<string, any> = this.globalMutableHeaders;
+            headers.Authorization = `Bearer ${accessTokenResp.data.access_token}`;
+
+            const queryParams: Record<string, any> = {};
+
+            queryParams.transactionRef = txRef;
+
+            const resp = await this.$.get<GetTransactionByRefResponse>(
+                "/transactions/accounts/single",
+                headers,
+                queryParams
+            );
+
+            if (typeof resp.data === "string") throw new Error(resp.data);
+
+            return resp.data as GetTransactionByRefResponse;
+        } catch (error: any) {
+            return Promise.reject(error);
+        }
+    }
+
+    async getTransactionOnNonParentAccountUsingReference(accountId: string, txRef: string) {
+        try {
+            const accessTokenResp = await this.obtainAccessToken();
+
+            const headers: Record<string, any> = this.globalMutableHeaders;
+            headers.Authorization = `Bearer ${accessTokenResp.data.access_token}`;
+
+            const queryParams: Record<string, any> = {};
+
+            queryParams.transactionRef = txRef;
+
+            const urlPath = "/transactions/accounts/{accountId}/single";
+            const resp = await this.$.get<GetTransactionByRefResponse>(
+                fillStringPlaceholders(urlPath, { accountId }),
+                headers,
+                queryParams
+            );
+
+            if (typeof resp.data === "string") throw new Error(resp.data);
+
+            return resp.data as GetTransactionByRefResponse;
         } catch (error: any) {
             return Promise.reject(error);
         }
