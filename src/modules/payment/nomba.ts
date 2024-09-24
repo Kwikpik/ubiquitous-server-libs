@@ -114,7 +114,11 @@ class NombaPaymentModule {
         body.client_secret = this.clientSecret;
 
         try {
-            const resp = await this.$.post<Record<string, any>, AccessTokenResponse>("/auth/token/issue", body);
+            const resp = await this.$.post<Record<string, any>, AccessTokenResponse>(
+                "/auth/token/issue",
+                body,
+                this.globalMutableHeaders
+            );
 
             if (typeof resp.data === "string") throw new Error(resp.data);
 
