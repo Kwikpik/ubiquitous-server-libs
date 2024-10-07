@@ -151,7 +151,7 @@ class NombaPaymentModule {
     async createVirtualAccount(accountRef: string, accountName: string) {
         const body: Record<string, any> = {};
 
-        body.accoutRef = accountRef;
+        body.accountRef = accountRef;
         body.accountName = accountName;
 
         try {
