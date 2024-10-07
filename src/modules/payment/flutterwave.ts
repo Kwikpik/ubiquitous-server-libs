@@ -3,11 +3,29 @@ import { HTTPModule } from "../../utils/http";
 import { fillStringPlaceholders } from "../../utils/mappers";
 import { FLUTTERWAVE_SECRET } from "../../variables";
 
-interface GeneratePaymentLinkResponse {
+interface BaseResponse {
     status: "success" | "failed";
     message: string;
+}
+
+interface GeneratePaymentLinkResponse extends BaseResponse {
     data: {
         link: string;
+    };
+}
+
+interface ResolveBankAccountResponse extends BaseResponse {
+    data: {
+        account_number: string;
+        account_name: string;
+    };
+}
+
+interface FetchBanksResponse extends BaseResponse {
+    data: {
+        id: number;
+        code: string;
+        name: string;
     };
 }
 
@@ -63,6 +81,29 @@ class FlutterwavePaymentModule {
 
         try {
             const res = await this.$.post<any, any>("/v3/transfers", body);
+            return res;
+        } catch (error: any) {
+            throw error;
+        }
+    }
+
+    async resolveBankAccount(accountNumber: string, accountBank: string) {
+        const body: Record<string, any> = {};
+        body.account_bank = accountBank;
+        body.account_number = accountNumber;
+
+        try {
+            const res = await this.$.post<any, ResolveBankAccountResponse>("/v3/accounts/resolve", body);
+            return res;
+        } catch (error: any) {
+            throw error;
+        }
+    }
+
+    async getAllBanks(country: "EG" | "ET" | "GH" | "KE" | "MW" | "NG" | "RW" | "SL" | "TZ" | "UG" | "US" | "ZA") {
+        try {
+            const urlPath = "/v3/banks/{country}";
+            const res = await this.$.get<FetchBanksResponse>(fillStringPlaceholders(urlPath, { country }));
             return res;
         } catch (error: any) {
             throw error;
