@@ -19,6 +19,7 @@ class LocalPNInstance {
 
     constructor(userAuthKey: string, configs: OSAppConfig[]) {
         configs.forEach(config => {
+            this.$apps[config.appName] = {} as any;
             this.$apps[config.appName].api = configureOSClient(userAuthKey, config.restApiKey);
             this.$apps[config.appName].appId = config.appId;
         });
