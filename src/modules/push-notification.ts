@@ -8,20 +8,27 @@ import {
 import { configureOSClient } from "../utils/push-notifications";
 import { randomUUID } from "crypto";
 
+interface OSAppConfig {
+    appId: string;
+    restApiKey: string;
+    appName: string;
+}
+
 class LocalPNInstance {
-    private $pnApi: DefaultApi;
-    private appId: string;
+    private $apps: { [appName: string]: { api: DefaultApi; appId: string } } = {};
 
-    constructor(restApiKey: string, appId: string) {
-        this.$pnApi = configureOSClient(restApiKey);
-        this.appId = appId;
+    constructor(userAuthKey: string, configs: OSAppConfig[]) {
+        configs.forEach(config => {
+            this.$apps[config.appName].api = configureOSClient(userAuthKey, config.restApiKey);
+            this.$apps[config.appName].appId = config.appId;
+        });
     }
 
-    static createLocalPNInstance(appId: string, restApiKey: string) {
-        return new LocalPNInstance(restApiKey, appId);
+    static createLocalPNInstance(userAuthKey: string, configs: OSAppConfig[]) {
+        return new LocalPNInstance(userAuthKey, configs);
     }
 
-    async createPNUser(aliasLabel: string, aliasId: string) {
+    async createPNUser(appName: string, aliasLabel: string, aliasId: string) {
         const user = new OSUser();
 
         user.identity = {
@@ -29,9 +36,10 @@ class LocalPNInstance {
         };
 
         try {
-            const u = await this.$pnApi.createUser(this.appId, user);
+            const app = this.$apps[appName];
+            const u = await app.api.createUser(app.appId, user);
             return {
-                id: u.identity![aliasLabel],
+                id: u.identity?.[aliasLabel],
             };
         } catch (reason) {
             return Promise.reject(reason);
@@ -39,6 +47,7 @@ class LocalPNInstance {
     }
 
     async createPNSubscription(
+        appName: string,
         aliasLabel: string,
         aliasId: string,
         type:
@@ -140,7 +149,8 @@ class LocalPNInstance {
         }
 
         try {
-            const s = await this.$pnApi.createSubscription(this.appId, aliasLabel, aliasId, subscription);
+            const app = this.$apps[appName];
+            const s = await app.api.createSubscription(app.appId, aliasLabel, aliasId, subscription);
             return {
                 ...s.subscription,
             };
@@ -149,18 +159,21 @@ class LocalPNInstance {
         }
     }
 
-    deletePNSubscription(subId: string) {
-        return this.$pnApi.deleteSubscription(this.appId, subId);
+    deletePNSubscription(appName: string, subId: string) {
+        const app = this.$apps[appName];
+        return app.api.deleteSubscription(app.appId, subId);
     }
 
     async createPN(
+        appName: string,
         content: string,
         heading: string,
         targetType: "subscription_id" | "alias",
         targetData: string[] | { [key: string]: string[] }
     ) {
+        const app = this.$apps[appName];
         const notification = new OSNotification();
-        notification.app_id = this.appId;
+        notification.app_id = app.appId;
         notification.external_id = randomUUID();
         notification.target_channel = "push";
         notification.contents = {
@@ -174,7 +187,7 @@ class LocalPNInstance {
         else notification.include_aliases = targetData as { [key: string]: string[] };
 
         try {
-            const n = await this.$pnApi.createNotification(notification);
+            const n = await app.api.createNotification(notification);
             return n;
         } catch (reason) {
             return Promise.reject(reason);
@@ -188,5 +201,5 @@ class LocalPNInstance {
  * @param restApiKey API key
  * @returns
  */
-export const initializePNInstance = (appId: string, restApiKey: string) =>
-    LocalPNInstance.createLocalPNInstance(appId, restApiKey);
+export const initializePNInstance = (userAuthKey: string, configs: OSAppConfig[]) =>
+    LocalPNInstance.createLocalPNInstance(userAuthKey, configs);
