@@ -1,14 +1,21 @@
-import { DefaultApi, createConfiguration } from "@onesignal/node-onesignal";
+import { DefaultApi, type TokenProvider, createConfiguration } from "@onesignal/node-onesignal";
 
-export const configureOSClient = (restApiKey: string) => {
-    const tokenProvider = {
+export const configureOSClient = (userAuthKey: string, restApiKey: string) => {
+    const authKeyTokenProvider: TokenProvider = {
+        getToken: () => userAuthKey,
+    };
+
+    const restApiTokenProvider: TokenProvider = {
         getToken: () => restApiKey,
     };
 
     const configuration = createConfiguration({
         authMethods: {
+            user_auth_key: {
+                tokenProvider: authKeyTokenProvider,
+            },
             rest_api_key: {
-                tokenProvider,
+                tokenProvider: restApiTokenProvider,
             },
         },
     });
