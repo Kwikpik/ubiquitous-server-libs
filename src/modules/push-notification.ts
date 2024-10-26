@@ -197,8 +197,8 @@ class LocalPNInstance {
 
 /**
  *
- * @param appId OneSignal application ID
- * @param restApiKey API key
+ * @param userAuthKey OneSignal application ID
+ * @param configs List of configurations for multiple apps
  * @returns
  */
 export const initializePNInstance = (userAuthKey: string, configs: OSAppConfig[]) =>
