@@ -14,6 +14,10 @@ interface OSAppConfig {
     appName: string;
 }
 
+const delay = async (timeout = 5000) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+};
+
 class LocalPNInstance {
     private $apps: { [appName: string]: { api: DefaultApi; appId: string } } = {};
 
@@ -39,7 +43,7 @@ class LocalPNInstance {
         try {
             const app = this.$apps[appName];
             await app.api.createUser(app.appId, user);
-
+            await delay(17000);
             const u = await app.api.getUser(app.appId, aliasLabel, aliasId);
             return {
                 id: u.identity?.[aliasLabel],
@@ -156,6 +160,7 @@ class LocalPNInstance {
 
             const app = this.$apps[appName];
             await app.api.createSubscription(app.appId, aliasLabel, aliasId, subscription);
+            await delay(17000);
             const user = await app.api.getUser(app.appId, aliasLabel, aliasId);
             const s = user.subscriptions.find(sub => sub.token === subscription.subscription.token);
             return s;
