@@ -38,7 +38,9 @@ class LocalPNInstance {
 
         try {
             const app = this.$apps[appName];
-            const u = await app.api.createUser(app.appId, user);
+            await app.api.createUser(app.appId, user);
+
+            const u = await app.api.getUser(app.appId, aliasLabel, aliasId);
             return {
                 id: u.identity?.[aliasLabel],
             };
@@ -150,11 +152,14 @@ class LocalPNInstance {
         }
 
         try {
+
+            subscription.subscription.enabled = true;
+
             const app = this.$apps[appName];
-            const s = await app.api.createSubscription(app.appId, aliasLabel, aliasId, subscription);
-            return {
-                ...s.subscription,
-            };
+            await app.api.createSubscription(app.appId, aliasLabel, aliasId, subscription);
+            const user = await app.api.getUser(app.appId, aliasLabel, aliasId);
+            const s = user.subscriptions.find((sub) => sub.token === subscription.subscription.token);
+            return s;
         } catch (reason) {
             return Promise.reject(reason);
         }
