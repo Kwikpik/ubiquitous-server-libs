@@ -152,13 +152,12 @@ class LocalPNInstance {
         }
 
         try {
-
             subscription.subscription.enabled = true;
 
             const app = this.$apps[appName];
             await app.api.createSubscription(app.appId, aliasLabel, aliasId, subscription);
             const user = await app.api.getUser(app.appId, aliasLabel, aliasId);
-            const s = user.subscriptions.find((sub) => sub.token === subscription.subscription.token);
+            const s = user.subscriptions.find(sub => sub.token === subscription.subscription.token);
             return s;
         } catch (reason) {
             return Promise.reject(reason);
