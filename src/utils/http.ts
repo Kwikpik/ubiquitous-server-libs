@@ -34,7 +34,7 @@ export class HTTPModule {
       return {
         statusCode: error.response?.status ?? HttpStatusCodes.INTERNAL_SERVER_ERROR,
         responseType: HttpResponseTypes.FAILED,
-        data: error.message,
+        data: error.response?.data?.error ?? error.message,
       };
     }
   }
@@ -51,7 +51,7 @@ export class HTTPModule {
       return {
         statusCode: error.response?.status ?? HttpStatusCodes.INTERNAL_SERVER_ERROR,
         responseType: HttpResponseTypes.FAILED,
-        data: error.message,
+        data: error.response?.data?.error ?? error.message,
       };
     }
   }
@@ -69,7 +69,7 @@ export class HTTPModule {
       return {
         statusCode: error.response?.status ?? HttpStatusCodes.INTERNAL_SERVER_ERROR,
         responseType: HttpResponseTypes.FAILED,
-        data: error.message,
+        data: error.response?.data?.error ?? error.message,
       };
     }
   }
@@ -87,7 +87,7 @@ export class HTTPModule {
       return {
         statusCode: error.response?.status ?? HttpStatusCodes.INTERNAL_SERVER_ERROR,
         responseType: HttpResponseTypes.FAILED,
-        data: error.message,
+        data: error.response?.data?.error ?? error.message,
       };
     }
   }
@@ -104,7 +104,7 @@ export class HTTPModule {
       return {
         statusCode: error.response?.status ?? HttpStatusCodes.INTERNAL_SERVER_ERROR,
         responseType: HttpResponseTypes.FAILED,
-        data: error.message,
+        data: error.response?.data?.error ?? error.message,
       };
     }
   }
