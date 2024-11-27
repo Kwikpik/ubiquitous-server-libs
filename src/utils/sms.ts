@@ -18,11 +18,11 @@ export const send = async (to: string | string[], sms: string): Promise<MessageR
     (typeof to === "string" && (to.startsWith("+234") || to.startsWith("234"))) ||
     (Array.isArray(to) && to.every(x => x.startsWith("+234") || x.startsWith("234")));
   const from = isNG ? "N-Alert" : "Kwikpik";
-  const channel = isNG ? ["dnd", "whatsapp"] : ["generic", "whatsapp"];
+  const channel = isNG ? ["dnd", "whatsapp_otp"] : ["generic", "whatsapp_otp"];
 
   try {
     const res = await Promise.all(
-      channel.map(ch => api.messaging({ to, sms, channel: ch as "generic" | "whatsapp" | "dnd", from }).send())
+      channel.map(ch => api.messaging({ to, sms, channel: ch as "generic" | "whatsapp_otp" | "dnd", from }).send())
     );
     return res;
   } catch (error) {
