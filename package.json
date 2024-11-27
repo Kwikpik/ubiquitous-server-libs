@@ -1,6 +1,6 @@
 {
   "name": "@kwikpik/server-libs",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
@@ -17,7 +17,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@lonely_dev/termii-js": "^1.0.2",
+    "@lonely_dev/termii-js": "^1.0.4",
     "@onesignal/node-onesignal": "^5.0.0-alpha-01",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
