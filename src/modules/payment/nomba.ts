@@ -224,6 +224,7 @@ class NombaPaymentModule {
     accountNumber: string,
     accountName: string,
     bankCode: string,
+    reference?: string,
     narration?: string
   ) {
     const body: Record<string, any> = {};
@@ -232,9 +233,8 @@ class NombaPaymentModule {
     body.accountNumber = accountNumber;
     body.accountName = accountName;
     body.bankCode = bankCode;
-    body.merchantTxRef = "KWI:".concat(
-      generate(20, { digits: true, upperCase: true, alphabets: true, specialChar: false })
-    );
+    body.merchantTxRef =
+      reference ?? "KWI:".concat(generate(20, { digits: true, upperCase: true, alphabets: true, specialChar: false }));
     body.senderName = "Kwikpik";
     body.narration = narration;
 
