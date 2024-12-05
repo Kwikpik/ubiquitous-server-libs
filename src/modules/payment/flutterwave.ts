@@ -62,7 +62,8 @@ class FlutterwavePaymentModule {
     accountNumber: string,
     amount: number,
     narration: string,
-    currency: string
+    currency: string,
+    reference?: string
   ) {
     const body: Record<string, any> = {};
 
@@ -71,13 +72,15 @@ class FlutterwavePaymentModule {
     body.account_number = accountNumber;
     body.currency = currency;
     body.narration = narration;
-    body.reference = "transfer_".concat(
-      generate(15, {
-        digits: true,
-        alphabets: true,
-        upperCase: true,
-      })
-    );
+    body.reference =
+      reference ??
+      "transfer_".concat(
+        generate(15, {
+          digits: true,
+          alphabets: true,
+          upperCase: true,
+        })
+      );
 
     try {
       const res = await this.$.post<any, any>("/v3/transfers", body);

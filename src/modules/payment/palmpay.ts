@@ -1,6 +1,7 @@
 import { createHash, createSign } from "crypto";
 import { HTTPModule } from "../../utils/http";
 import { generate } from "../../utils/generator";
+import assert from "assert";
 
 interface PalmpayConfig {
   appId?: string;
@@ -75,9 +76,11 @@ class PalmpayPaymentModule {
 
     try {
       const res = await this.$.post<any, any>("/api/v2/virtual/account/label/create", body, headers);
+
+      assert.ok(res.data.respCode === "00000000", res.data.respMsg);
       return res;
     } catch (error) {
-      throw error;
+      return Promise.reject(error);
     }
   }
 }

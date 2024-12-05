@@ -146,7 +146,7 @@ class PaystackPaymentModule {
     }
   }
 
-  async initiateTransfer(amount: number, recipient: string, reason?: string, currency?: string) {
+  async initiateTransfer(amount: number, recipient: string, reason?: string, currency?: string, reference?: string) {
     try {
       const body: Record<string, any> = {};
 
@@ -155,13 +155,15 @@ class PaystackPaymentModule {
       body.recipient = recipient;
       body.reason = reason;
       body.currency = currency;
-      body.reference = "tx_".concat(
-        generate(15, {
-          digits: true,
-          alphabets: true,
-          upperCase: false,
-        })
-      );
+      body.reference =
+        reference ??
+        "tx_".concat(
+          generate(15, {
+            digits: true,
+            alphabets: true,
+            upperCase: false,
+          })
+        );
 
       const res = await this.$.post<any, any>("/transfer", body);
       return res;
@@ -170,7 +172,10 @@ class PaystackPaymentModule {
     }
   }
 
-  async initiateBulkTransfer(transfers: { amount: number; recipient: string; reason?: string }[], currency?: string) {
+  async initiateBulkTransfer(
+    transfers: { amount: number; recipient: string; reason?: string; reference?: string }[],
+    currency?: string
+  ) {
     try {
       const body: Record<string, any> = {};
 
@@ -179,13 +184,15 @@ class PaystackPaymentModule {
       body.transfers = transfers.map(transfer => ({
         ...transfer,
         amount: transfer.amount * 100,
-        reference: "tx_".concat(
-          generate(15, {
-            digits: true,
-            alphabets: true,
-            upperCase: false,
-          })
-        ),
+        reference:
+          transfer.reference ??
+          "tx_".concat(
+            generate(15, {
+              digits: true,
+              alphabets: true,
+              upperCase: false,
+            })
+          ),
       }));
 
       const res = await this.$.post<any, any>("/transfer/bulk", body);
