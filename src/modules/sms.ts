@@ -101,6 +101,15 @@ class SMSModule {
       throw error;
     }
   }
+
+  async sendExternalPhoneNumberVerificationMessage(to: string | string[], code: string, user?: string) {
+    try {
+      const msg = await send(to, fillStringPlaceholders(SMS.EXTERNAL_VERIFICATION, { user, code }));
+      return msg;
+    } catch (error: any) {
+      throw error;
+    }
+  }
 }
 
 /**
