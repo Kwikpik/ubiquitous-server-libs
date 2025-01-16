@@ -9,7 +9,7 @@ import {
 import { LocalDataSourceType, initializeDSWithDefaultOptions } from "./database";
 import assert from "assert";
 import isNil from "lodash/isNil";
-import { ExcludeFuctionsMapper, OptionalKeysMapper } from "../utils/mappers";
+import { OptionalKeysMapper } from "../utils/mappers";
 
 interface OperationResponse<T> {
   responseType: "success" | "failure";
@@ -37,10 +37,20 @@ class LocalDataSourceAccessor<T extends ObjectLiteral> {
     assert.ok(this.DS.isConnected(), "datasource_not_connected_to_server");
   }
 
-  async insertEntity(value: T): Promise<OperationResponse<ExcludeFuctionsMapper<T> & ObjectLiteral>> {
+  async insertEntity(value: T): Promise<OperationResponse<T & ObjectLiteral>> {
     this.checkTargetAndDataSource();
     try {
       const data = await this.DS!.insertEntity(this.target!, value);
+      return { responseType: "success" as "success" | "failure", data, error: undefined };
+    } catch (error: any) {
+      return { responseType: "failure" as "success" | "failure", data: undefined, error: error.message };
+    }
+  }
+
+  async insertManyEntities(value: T[]): Promise<OperationResponse<(T & ObjectLiteral)[]>> {
+    this.checkTargetAndDataSource();
+    try {
+      const data = await this.DS!.insertManyEntities(this.target!, value);
       return { responseType: "success" as "success" | "failure", data, error: undefined };
     } catch (error: any) {
       return { responseType: "failure" as "success" | "failure", data: undefined, error: error.message };
