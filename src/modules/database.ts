@@ -151,6 +151,15 @@ class LocalDataSource {
     }
   }
 
+  public async insertManyEntities<T>(target: EntityTarget<T>, values: T[]) {
+    try {
+      const value = await this.DS.getRepository(target).save(this.DS.getRepository(target).create(values));
+      return value;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   public async querySingleEntity<T>(
     target: EntityTarget<T>,
     where: FindOptionsWhere<T> | FindOptionsWhere<T>[],
