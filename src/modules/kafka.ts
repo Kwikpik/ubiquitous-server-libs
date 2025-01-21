@@ -1,7 +1,7 @@
 import { Consumer, Kafka, Producer } from "kafkajs";
 import isNil from "lodash/isNil";
 
-interface LocalKafkaInstanceOpts {
+export interface LocalKafkaInstanceOpts {
   /**
    * Client ID
    */
@@ -28,14 +28,14 @@ interface LocalKafkaInstanceOpts {
   serviceName?: string;
 }
 
-interface LocalKafkaProducerOpts {
+export interface LocalKafkaProducerOpts {
   /**
    * Whether to automatically create topics.
    */
   shouldAutoCreateTopics?: boolean;
 }
 
-interface LocalKafkaConsumerOpts {
+export interface LocalKafkaConsumerOpts {
   /**
    * Whether to automatically create topics
    */

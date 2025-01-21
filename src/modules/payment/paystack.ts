@@ -3,7 +3,7 @@ import { PAYSTACK_SECRET } from "../../variables";
 import { generate } from "../../utils/generator";
 import { fillStringPlaceholders } from "../../utils/mappers";
 
-interface GeneratePaymentLinkResponse {
+export interface GeneratePaymentLinkResponse {
   status: boolean;
   message: string;
   data: {
@@ -13,7 +13,7 @@ interface GeneratePaymentLinkResponse {
   };
 }
 
-interface CreateTransferRecipientResponse {
+export interface CreateTransferRecipientResponse {
   status: boolean;
   message: string;
   data: {

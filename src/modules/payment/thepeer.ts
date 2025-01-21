@@ -1,7 +1,7 @@
 import { HTTPModule } from "../../utils/http";
 import { THE_PEER_SECRET } from "../../variables";
 
-interface GeneratePaymentLinkResponse {
+export interface GeneratePaymentLinkResponse {
   redirect_url: string;
   url: string;
   checkout: {
@@ -16,7 +16,7 @@ interface GeneratePaymentLinkResponse {
   };
 }
 
-interface Transaction {
+export interface Transaction {
   type: string;
   transaction: {
     id: string;

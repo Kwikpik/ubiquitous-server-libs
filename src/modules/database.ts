@@ -12,7 +12,7 @@ import { join } from "path";
 import { ExcludeFuctionsMapper, OptionalKeysMapper } from "../utils/mappers";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
-interface LocalDataSourceOpts {
+export interface LocalDataSourceOpts {
   /**
    * Port number. Defaults to 5432.
    */

@@ -11,7 +11,7 @@ import assert from "assert";
 import isNil from "lodash/isNil";
 import { OptionalKeysMapper } from "../utils/mappers";
 
-interface OperationResponse<T> {
+export interface OperationResponse<T> {
   responseType: "success" | "failure";
   data?: T;
   error?: any;
