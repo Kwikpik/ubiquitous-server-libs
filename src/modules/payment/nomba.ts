@@ -2,12 +2,12 @@ import { generate } from "../../utils/generator";
 import { HTTPModule } from "../../utils/http";
 import { fillStringPlaceholders } from "../../utils/mappers";
 
-interface BaseResponse {
+export interface BaseResponse {
   code: string;
   description: string;
 }
 
-interface AccessTokenResponse extends BaseResponse {
+export interface AccessTokenResponse extends BaseResponse {
   data: {
     businessId: string;
     access_token: string;
@@ -16,7 +16,7 @@ interface AccessTokenResponse extends BaseResponse {
   };
 }
 
-interface AccountBalanceResponse extends BaseResponse {
+export interface AccountBalanceResponse extends BaseResponse {
   data: {
     amount: string;
     currency: string;
@@ -24,7 +24,7 @@ interface AccountBalanceResponse extends BaseResponse {
   };
 }
 
-interface CreateVirtualAccountResponse extends BaseResponse {
+export interface CreateVirtualAccountResponse extends BaseResponse {
   data: {
     createdAt: string;
     accountHolderId: string;
@@ -40,7 +40,7 @@ interface CreateVirtualAccountResponse extends BaseResponse {
   };
 }
 
-interface BankTransferResponse extends BaseResponse {
+export interface BankTransferResponse extends BaseResponse {
   data: {
     amount: number;
     meta: {
@@ -57,7 +57,7 @@ interface BankTransferResponse extends BaseResponse {
   };
 }
 
-interface GetTransactionByRefResponse extends BaseResponse {
+export interface GetTransactionByRefResponse extends BaseResponse {
   data: {
     id: string;
     status: string;

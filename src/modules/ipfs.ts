@@ -6,7 +6,7 @@ import assert from "assert";
 import { randomUUID } from "crypto";
 import isNil from "lodash/isNil";
 
-interface IPFSConfig {
+export interface IPFSConfig {
   /**
    * Port to connect to.
    */

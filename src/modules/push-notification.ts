@@ -8,7 +8,7 @@ import {
 import { configureOSClient } from "../utils/push-notifications";
 import { randomUUID } from "crypto";
 
-interface OSAppConfig {
+export interface OSAppConfig {
   appId: string;
   restApiKey: string;
   appName: string;
@@ -33,7 +33,7 @@ class LocalPNInstance {
     return new LocalPNInstance(userAuthKey, configs);
   }
 
-  async createPNUser(appName: string, aliasLabel: string, aliasId: string) {
+  async createPNUser(appName: string, aliasLabel: string, aliasId: string, delayMS: number = 8000) {
     const user = new OSUser();
 
     user.identity = {
@@ -43,7 +43,7 @@ class LocalPNInstance {
     try {
       const app = this.$apps[appName];
       await app.api.createUser(app.appId, user);
-      await delay(8000);
+      await delay(delayMS);
       const u = await app.api.getUser(app.appId, aliasLabel, aliasId);
       return {
         id: u.identity?.[aliasLabel],
@@ -68,7 +68,8 @@ class LocalPNInstance {
       | "chrome-extension"
       | "fireos"
       | "macos",
-    token: string
+    token: string,
+    delayMS: number = 8000
   ) {
     let subscription: SubscriptionBody = {};
 
@@ -160,7 +161,7 @@ class LocalPNInstance {
 
       const app = this.$apps[appName];
       await app.api.createSubscription(app.appId, aliasLabel, aliasId, subscription);
-      await delay(8000);
+      await delay(delayMS);
       const user = await app.api.getUser(app.appId, aliasLabel, aliasId);
       const s = user.subscriptions.find(sub => sub.token === subscription.subscription.token);
       return s;

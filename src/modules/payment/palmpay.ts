@@ -3,7 +3,7 @@ import { HTTPModule } from "../../utils/http";
 import { generate } from "../../utils/generator";
 import assert from "assert";
 
-interface PalmpayConfig {
+export interface PalmpayConfig {
   appId?: string;
   environment?: "test" | "production";
 }

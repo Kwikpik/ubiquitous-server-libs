@@ -3,25 +3,25 @@ import { HTTPModule } from "../../utils/http";
 import { fillStringPlaceholders } from "../../utils/mappers";
 import { FLUTTERWAVE_SECRET } from "../../variables";
 
-interface BaseResponse {
+export interface BaseResponse {
   status: "success" | "failed";
   message: string;
 }
 
-interface GeneratePaymentLinkResponse extends BaseResponse {
+export interface GeneratePaymentLinkResponse extends BaseResponse {
   data: {
     link: string;
   };
 }
 
-interface ResolveBankAccountResponse extends BaseResponse {
+export interface ResolveBankAccountResponse extends BaseResponse {
   data: {
     account_number: string;
     account_name: string;
   };
 }
 
-interface FetchBanksResponse extends BaseResponse {
+export interface FetchBanksResponse extends BaseResponse {
   data: {
     id: number;
     code: string;
