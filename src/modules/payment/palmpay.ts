@@ -42,7 +42,7 @@ class PalmpayPaymentModule {
     const md5 = createHash("md5").update(toSign).digest("hex").toUpperCase();
     const signature = createSign("sha1WithRSAEncryption")
       .update(md5)
-      .sign(Buffer.from(secret.split(String.raw`\n`).join("\n"), "base64"));
+      .sign(secret.split(String.raw`\n`).join("\n"), "base64");
     return signature;
   }
 
