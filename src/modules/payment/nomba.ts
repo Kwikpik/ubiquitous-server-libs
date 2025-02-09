@@ -121,6 +121,7 @@ class NombaPaymentModule {
       );
 
       if (typeof resp.data === "string") throw new Error(resp.data);
+      if (resp.data.code !== "00") throw new Error(resp.data.description);
 
       return resp.data as AccessTokenResponse;
     } catch (error: any) {
@@ -139,6 +140,7 @@ class NombaPaymentModule {
       const balanceResp = await this.$.get<AccountBalanceResponse>(fillStringPlaceholders(urlPath, { accountId }));
 
       if (typeof balanceResp.data === "string") throw new Error(balanceResp.data);
+      if (balanceResp.data.code !== "00") throw new Error(balanceResp.data.description);
 
       return balanceResp.data as AccountBalanceResponse;
     } catch (error: any) {
@@ -165,6 +167,7 @@ class NombaPaymentModule {
       );
 
       if (typeof resp.data === "string") throw new Error(resp.data);
+      if (resp.data.code !== "00") throw new Error(resp.data.description);
 
       return resp.data as CreateVirtualAccountResponse;
     } catch (error: any) {
@@ -186,6 +189,7 @@ class NombaPaymentModule {
       const resp = await this.$.get<GetTransactionByRefResponse>("/transactions/accounts/single", headers, queryParams);
 
       if (typeof resp.data === "string") throw new Error(resp.data);
+      if (resp.data.code !== "00") throw new Error(resp.data.description);
 
       return resp.data as GetTransactionByRefResponse;
     } catch (error: any) {
@@ -212,6 +216,7 @@ class NombaPaymentModule {
       );
 
       if (typeof resp.data === "string") throw new Error(resp.data);
+      if (resp.data.code !== "00") throw new Error(resp.data.description);
 
       return resp.data as GetTransactionByRefResponse;
     } catch (error: any) {
@@ -247,6 +252,7 @@ class NombaPaymentModule {
       const resp = await this.$.post<Record<string, any>, BankTransferResponse>("/transfers/bank", body, headers);
 
       if (typeof resp.data === "string") throw new Error(resp.data);
+      if (resp.data.code !== "00") throw new Error(resp.data.description);
 
       return resp.data as BankTransferResponse;
     } catch (error: any) {
