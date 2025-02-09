@@ -18,6 +18,12 @@ const delay = async (timeout = 5000) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
+type NotificationMessage = {
+  message: string;
+  title: string;
+  additionalData?: Record<string, any>;
+};
+
 class LocalPNInstance {
   private $apps: { [appName: string]: { api: DefaultApi; appId: string } } = {};
 
@@ -177,22 +183,24 @@ class LocalPNInstance {
 
   async createPN(
     appName: string,
-    content: string,
-    heading: string,
+    content: NotificationMessage,
     targetType: "subscription_id" | "alias",
     targetData: string[] | { [key: string]: string[] }
   ) {
     const app = this.$apps[appName];
+    const { message, title, additionalData } = content;
+
     const notification = new OSNotification();
     notification.app_id = app.appId;
     notification.external_id = randomUUID();
     notification.target_channel = "push";
     notification.contents = {
-      en: content,
+      en: message,
     };
     notification.headings = {
-      en: heading,
+      en: title,
     };
+    notification.data = additionalData || {};
 
     if (targetType === "subscription_id") notification.include_subscription_ids = targetData as string[];
     else notification.include_aliases = targetData as { [key: string]: string[] };
