@@ -14,14 +14,22 @@ export interface OSAppConfig {
   appName: string;
 }
 
-const delay = async (timeout = 5000) => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-};
-
 type NotificationMessage = {
   message: string;
   title: string;
   additionalData?: Record<string, any>;
+};
+
+type NotificationPayload = OSNotification & {
+  appName: string;
+  content: NotificationMessage;
+  targetType: "subscription_id" | "alias";
+  targetData: string[] | { [key: string]: string[] };
+  additionalData?: Record<string, any>;
+};
+
+const delay = async (timeout = 5000) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
 class LocalPNInstance {
@@ -171,8 +179,8 @@ class LocalPNInstance {
       const user = await app.api.getUser(app.appId, aliasLabel, aliasId);
       const s = user.subscriptions.find(sub => sub.token === subscription.subscription.token);
       return s;
-    } catch (reason) {
-      return Promise.reject(reason);
+    } catch (error) {
+      return Promise.reject(error?.response?.data?.errors?.[0]?.title || error?.message || "Unknown error");
     }
   }
 
@@ -181,26 +189,23 @@ class LocalPNInstance {
     return app.api.deleteSubscription(app.appId, subId);
   }
 
-  async createPN(
-    appName: string,
-    content: NotificationMessage,
-    targetType: "subscription_id" | "alias",
-    targetData: string[] | { [key: string]: string[] }
-  ) {
+  async createPN({ appName, content, targetType, targetData, ...payload }: NotificationPayload) {
     const app = this.$apps[appName];
     const { message, title, additionalData } = content;
 
-    const notification = new OSNotification();
-    notification.app_id = app.appId;
-    notification.external_id = randomUUID();
-    notification.target_channel = "push";
-    notification.contents = {
-      en: message,
+    const preparedPayload = {
+      app_id: app.appId,
+      external_id: payload.external_id ?? randomUUID(),
+      target_channel: "push",
+      contents: {
+        en: message,
+      },
+      headings: {
+        en: title,
+      },
+      data: additionalData ?? {},
     };
-    notification.headings = {
-      en: title,
-    };
-    notification.data = additionalData || {};
+    const notification = Object.assign(new OSNotification(), payload, preparedPayload);
 
     if (targetType === "subscription_id") notification.include_subscription_ids = targetData as string[];
     else notification.include_aliases = targetData as { [key: string]: string[] };
@@ -208,8 +213,8 @@ class LocalPNInstance {
     try {
       const n = await app.api.createNotification(notification);
       return n;
-    } catch (reason) {
-      return Promise.reject(reason);
+    } catch (error) {
+      return Promise.reject(error?.response?.data?.errors?.[0]?.title || error?.message || "Unknown error");
     }
   }
 }
