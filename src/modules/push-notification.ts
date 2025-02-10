@@ -20,7 +20,7 @@ type NotificationMessage = {
   additionalData?: Record<string, any>;
 };
 
-type NotificationPayload = OSNotification & {
+type NotificationPayload = Omit<OSNotification, 'app_id'> & {
   appName: string;
   content: NotificationMessage;
   targetType: "subscription_id" | "alias";
