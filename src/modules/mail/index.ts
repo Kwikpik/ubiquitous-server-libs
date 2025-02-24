@@ -44,8 +44,8 @@ class MailingModule {
     }
   }
 
-  async sendVerificationSuccess(to: string | string[], name: string) {
-    const template = "verification-successful";
+  async sendVerificationSuccess(to: string | string[], userType: UserType, name: string) {
+    const template = `${userType === "regular" ? "user" : userType}-verification-successful`;
 
     assert.ok(existsSync(join(__dirname, "/templates", `${template.trim()}.handlebars`)), "template_not_found");
 
@@ -57,7 +57,7 @@ class MailingModule {
     }
   }
 
-  async sendKYCStatus(to: string | string[], name: string, status: "successful" | "failed") {
+  async sendKYCStatus(to: string | string[], name: string, status: "successful" | "failed" | "submitted") {
     let template: string = "";
 
     switch(status) {
@@ -66,6 +66,9 @@ class MailingModule {
         break;
       case "failed":
         template = "kyc-successful";
+        break;
+      case "submitted":
+        template = "kyc-submitted";
         break;
     }
 
