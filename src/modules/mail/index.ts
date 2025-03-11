@@ -75,7 +75,7 @@ class MailingModule {
     assert.ok(existsSync(join(__dirname, "/templates", `${template.trim()}.handlebars`)), "template_not_found");
 
     try {
-      const subject = status === "successful" ? "KYC was successful" : "KYC failed";
+      const subject = status === "successful" ? "KYC was successful" : status === "failed" ? "KYC failed" : "KYC submitted";
       const res = await send(to, subject, template, { name });
       return res;
     } catch (error: any) {
