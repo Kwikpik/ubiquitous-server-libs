@@ -14,6 +14,10 @@ class MailingModule {
     return new MailingModule(email, password);
   }
 
+  async sendGenericMail({ to, subject, template, context }: { to: string | string[]; subject: string; template: string; context?: Record<string, any>}) {
+    
+  }
+
   async sendAccountVerificationOTP(to: string | string[], userType: UserType, name: string, otp: string) {
     let template: string = "";
 
