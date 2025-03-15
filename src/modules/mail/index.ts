@@ -6,8 +6,8 @@ import { existsSync } from "fs";
 type UserType = "regular" | "business" | "merchant" | "rider";
 
 class MailingModule {
-  constructor(email?: string, password?: string) {
-    initializeAndConfigureTransport(email, password, __dirname);
+  constructor(email?: string, password?: string, templateDir?: string) {
+    initializeAndConfigureTransport(email, password, templateDir ?? __dirname);
   }
 
   static initializeMailingModule(email?: string, password?: string) {
@@ -15,7 +15,14 @@ class MailingModule {
   }
 
   async sendGenericMail({ to, subject, template, context }: { to: string | string[]; subject: string; template: string; context?: Record<string, any>}) {
-    
+    assert.ok(existsSync(template), "template_not_found");
+
+    try {
+      const res = await send(to, subject, template, context);
+      return res;
+    } catch (error: any) {
+      throw error;
+    }
   }
 
   async sendAccountVerificationOTP(to: string | string[], userType: UserType, name: string, otp: string) {
@@ -116,6 +123,18 @@ class MailingModule {
 
     try {
       const res = await send(to, "You requested to change your password", template, { name, code });
+      return res;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
+  async sendPinChange(to: string | string[], name: string, code: string) {
+    const template: string = "change-pin";
+    assert.ok(existsSync(join(__dirname, "/templates", `${template.trim()}.handlebars`)), "template_not_found");
+
+    try {
+      const res = await send(to, "You requested to change your transaction pin", template, { name, code });
       return res;
     } catch (error: any) {
       throw error;
