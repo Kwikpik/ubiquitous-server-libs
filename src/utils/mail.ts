@@ -21,8 +21,8 @@ const configWithHBS = (directory?: string) => {
 };
 
 export const initializeAndConfigureTransport = (email?: string, password?: string, templatesDir?: string) => {
-  const user = email ?? (NM_EMAIL as string);
-  const pass = password ?? (NM_PASSWORD as string);
+  const user = email ?? NM_EMAIL as string;
+  const pass = password ?? NM_PASSWORD as string;
   const opts: SMTPTransport.Options = {
     host: "smtp.zoho.com",
     port: 465,
