@@ -40,25 +40,25 @@ export const initializeAndConfigureTransport = (
   // Use Handlebars as templating engine
   nodemailer.use("compile", hbsConfig);
 
-  return nodemailer;
-};
+  const send = async ({
+    to,
+    subject,
+    context,
+    template,
+  }: {
+    to: string | string[];
+    subject: string;
+    context: Record<string, any>;
+    template: string;
+  }) => {
+    assert.ok(nodemailer !== null, "nodemailer_uninitialized");
+    const opts = { to, subject, context, template, from: "Kwikpik Team <support@kwikpik.io>" };
+    try {
+      return nodemailer.sendMail(opts);
+    } catch (error) {
+      return await Promise.reject(error);
+    }
+  };
 
-export const send = async ({
-  to,
-  subject,
-  context,
-  template,
-}: {
-  to: string | string[];
-  subject: string;
-  context: Record<string, any>;
-  template: string;
-}) => {
-  assert.ok(nodemailer !== null, "nodemailer_uninitialized");
-  const opts = { to, subject, context, template, from: "Kwikpik Team <support@kwikpik.io>" };
-  try {
-    return nodemailer.sendMail(opts);
-  } catch (error) {
-    return await Promise.reject(error);
-  }
+  return { send };
 };
