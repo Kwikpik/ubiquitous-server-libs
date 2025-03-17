@@ -1,26 +1,26 @@
 import hbs from "nodemailer-express-handlebars";
-import { join } from "path";
 import { createTransport, Transporter } from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { NM_EMAIL, NM_PASSWORD } from "../variables";
 import assert from "assert";
-import isNil from "lodash/isNil";
 
-let nm: Transporter | null = null;
+let nodemailer: Transporter | null = null;
 
-const configWithHBS = (directory?: string) => {
-  const dir = directory ?? __dirname;
-
+const configWithHBS = (templatesDirectory: string) => {
   return hbs({
-    viewPath: join(dir, "/templates"),
+    viewPath: templatesDirectory,
     viewEngine: {
-      partialsDir: join(dir, "/templates"),
+      partialsDir: templatesDirectory,
       defaultLayout: false,
     },
   });
 };
 
-export const initializeAndConfigureTransport = (email?: string, password?: string, templatesDir?: string) => {
+export const initializeAndConfigureTransport = (
+  email?: string,
+  password?: string,
+  templatesDir: string = __dirname
+) => {
   const user = email ?? (NM_EMAIL as string);
   const pass = password ?? (NM_PASSWORD as string);
   const opts: SMTPTransport.Options = {
@@ -32,22 +32,32 @@ export const initializeAndConfigureTransport = (email?: string, password?: strin
       pass,
     },
   };
-  nm = createTransport(opts);
+  // Initialize transport
+  nodemailer = createTransport(opts);
 
   // Configure HBS
   const hbsConfig = configWithHBS(templatesDir);
+  // Use Handlebars as templating engine
+  nodemailer.use("compile", hbsConfig);
 
-  nm.use("compile", hbsConfig);
-
-  return nm;
+  return nodemailer;
 };
 
-export const send = async (to: string | string[], subject: string, template: string, context: Record<string, any>) => {
-  assert.ok(!isNil(nm), "nodemailer_uninitialized");
+export const send = async ({
+  to,
+  subject,
+  context,
+  template,
+}: {
+  to: string | string[];
+  subject: string;
+  context: Record<string, any>;
+  template: string;
+}) => {
+  assert.ok(nodemailer !== null, "nodemailer_uninitialized");
   const opts = { to, subject, context, template, from: "Kwikpik Team <support@kwikpik.io>" };
   try {
-    const res = await nm.sendMail(opts);
-    return res;
+    return nodemailer.sendMail(opts);
   } catch (error) {
     return await Promise.reject(error);
   }

@@ -1,11 +1,11 @@
 {
   "name": "@kwikpik/server-libs",
-  "version": "1.9.5",
+  "version": "1.10.0",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
     "format": "prettier --ignore-path \"./.prettierignore\" --write **/**/*.{js,ts,json}",
-    "build": "rm -rf dist && npx tsc && cpx ./src/modules/mail/templates/**/* ./dist/modules/mail/templates --clean",
+    "build": "rm -rf dist && npx tsc",
     "prepublishOnly": "npm run build && npm run format"
   },
   "keywords": [
