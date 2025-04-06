@@ -1,7 +1,7 @@
 import hbs from "nodemailer-express-handlebars";
 import { createTransport, Transporter } from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
-import { NM_EMAIL, NM_PASSWORD } from "../variables";
+import { NM_EMAIL, NM_PASSWORD, NM_HOST, NM_PORT } from "../variables";
 import assert from "assert";
 
 let nodemailer: Transporter | null = null;
@@ -17,15 +17,25 @@ const configWithHBS = (templatesDirectory: string) => {
 };
 
 export const initializeAndConfigureTransport = (
-  email?: string,
-  password?: string,
-  templatesDir: string = __dirname
+  {
+    email,
+    password,
+    host,
+    port,
+    templatesDir = __dirname,
+  }: {
+    email: string;
+    password: string;
+    host: string;
+    port: number;
+    templatesDir: string,
+  }
 ) => {
   const user = email ?? (NM_EMAIL as string);
   const pass = password ?? (NM_PASSWORD as string);
   const opts: SMTPTransport.Options = {
-    host: "smtp.zoho.com",
-    port: 465,
+    host: host || NM_HOST,
+    port: port || NM_PORT || 465,
     secure: true,
     auth: {
       user,
