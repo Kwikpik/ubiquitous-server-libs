@@ -16,21 +16,19 @@ const configWithHBS = (templatesDirectory: string) => {
   });
 };
 
-export const initializeAndConfigureTransport = (
-  {
-    username,
-    password,
-    host,
-    port,
-    templatesDir = __dirname,
-  }: {
-    username?: string;
-    password?: string;
-    host?: string;
-    port?: number;
-    templatesDir?: string,
-  }
-) => {
+export const initializeAndConfigureTransport = ({
+  username,
+  password,
+  host,
+  port,
+  templatesDir = __dirname,
+}: {
+  username?: string;
+  password?: string;
+  host?: string;
+  port?: number;
+  templatesDir?: string;
+}) => {
   const user = username ?? (NM_EMAIL as string);
   const pass = password ?? (NM_PASSWORD as string);
   const opts: SMTPTransport.Options = {
@@ -58,7 +56,7 @@ export const send = async ({
   subject,
   context,
   template,
-  from = NM_FROM
+  from = NM_FROM,
 }: {
   to: string | string[];
   subject: string;
