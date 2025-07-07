@@ -17,6 +17,12 @@ export interface LocalDataSourceOpts {
    * Port number. Defaults to 5432.
    */
   port?: number;
+
+  /**
+  * Host name for the DB.
+  */
+  host?: string;
+
   /**
    * Username to connect with.
    */
@@ -25,6 +31,10 @@ export interface LocalDataSourceOpts {
    * Password to connect with.
    */
   password?: string;
+  /**
+   * Full database connection url.
+   */
+  databaseUrl?: string;
   /**
    * Migrations to run.
    */
@@ -57,6 +67,16 @@ export interface LocalDataSourceOpts {
    * Docker service name if localhost is disabled
    */
   serviceName?: string;
+
+  /**
+   * Use ssl
+   */
+  ssl?: any
+
+  /**
+   * SSL mode
+   */
+  sslmode?: string
 }
 
 class LocalDataSource {
@@ -84,11 +104,11 @@ class LocalDataSource {
     opts.subscribers = opts.subscribers ?? ([] as string[]).concat(join(__dirname, "/subscribers/*.{ts,js}"));
     opts.log = opts.log ?? false;
     opts.shouldUseLocalhost = opts.shouldUseLocalhost ?? true;
-    opts.serviceName = opts.serviceName ?? "db";
+    opts.serviceName = opts.host ?? opts.serviceName ?? "db";
+    opts.ssl = opts.ssl ?? false
 
-    const url = `postgres://${opts.username}:${opts.password}@${
-      opts.shouldUseLocalhost ? "localhost" : opts.serviceName
-    }:${opts.port}/${opts.databaseName}`;
+    const url = opts.databaseUrl ?? `postgres://${opts.username}:${opts.password}@${opts.shouldUseLocalhost ? "localhost" : opts.serviceName
+      }:${opts.port}/${opts.databaseName}${opts.sslmode ?? ""}`;
     const opt: DataSourceOptions = {
       url,
       type: "postgres",
@@ -97,6 +117,7 @@ class LocalDataSource {
       subscribers: opts.subscribers,
       logging: opts.log,
       namingStrategy: new SnakeNamingStrategy(),
+      ssl: opts.ssl
     };
 
     // Set datasource
