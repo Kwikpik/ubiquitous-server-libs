@@ -17,8 +17,8 @@ export const send = async (to: string | string[], sms: string): Promise<MessageR
   const isNG =
     (typeof to === "string" && (to.startsWith("+234") || to.startsWith("234"))) ||
     (Array.isArray(to) && to.every(x => x.startsWith("+234") || x.startsWith("234")));
-  const from = isNG ? "N-Alert" : "Kwikpik";
-  const channel = isNG ? ["dnd", "whatsapp_otp"] : ["generic", "whatsapp_otp"];
+  const from = isNG ? "Kwik Pik" : "KwikPik GH";
+  const channel = isNG ? ["dnd"] : ["generic"];
 
   try {
     const res = await Promise.all(

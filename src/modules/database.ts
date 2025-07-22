@@ -19,8 +19,8 @@ export interface LocalDataSourceOpts {
   port?: number;
 
   /**
-  * Host name for the DB.
-  */
+   * Host name for the DB.
+   */
   host?: string;
 
   /**
@@ -71,12 +71,12 @@ export interface LocalDataSourceOpts {
   /**
    * Use ssl
    */
-  ssl?: any
+  ssl?: any;
 
   /**
    * SSL mode
    */
-  sslmode?: string
+  sslmode?: string;
 }
 
 class LocalDataSource {
@@ -105,10 +105,13 @@ class LocalDataSource {
     opts.log = opts.log ?? false;
     opts.shouldUseLocalhost = opts.shouldUseLocalhost ?? true;
     opts.serviceName = opts.host ?? opts.serviceName ?? "db";
-    opts.ssl = opts.ssl ?? false
+    opts.ssl = opts.ssl ?? false;
 
-    const url = opts.databaseUrl ?? `postgres://${opts.username}:${opts.password}@${opts.shouldUseLocalhost ? "localhost" : opts.serviceName
-      }:${opts.port}/${opts.databaseName}${opts.sslmode ?? ""}`;
+    const url =
+      opts.databaseUrl ??
+      `postgres://${opts.username}:${opts.password}@${opts.shouldUseLocalhost ? "localhost" : opts.serviceName}:${
+        opts.port
+      }/${opts.databaseName}${opts.sslmode ?? ""}`;
     const opt: DataSourceOptions = {
       url,
       type: "postgres",
@@ -117,7 +120,7 @@ class LocalDataSource {
       subscribers: opts.subscribers,
       logging: opts.log,
       namingStrategy: new SnakeNamingStrategy(),
-      ssl: opts.ssl
+      ssl: opts.ssl,
     };
 
     // Set datasource
