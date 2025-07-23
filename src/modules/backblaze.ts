@@ -45,6 +45,7 @@ export interface UploadFileResponse {
   accountId: string;
   bucketId: string;
   fileId: string;
+  fileName: string;
 }
 
 export interface BackblazeConfig {
@@ -93,7 +94,7 @@ class LocalBackblazeInstance {
     try {
       const authorizationResponse = await this.authorizeAccount();
       const response = await this.$httpInstance.get<GetUploadURLResponse>(
-        "/b2_get_uload_url",
+        "/b2_get_upload_url",
         { Authorization: authorizationResponse.authorizationToken },
         { bucketId }
       );
@@ -139,9 +140,9 @@ class LocalBackblazeInstance {
         fileContent,
         {
           Authorization: uploadUrlResponse.authorizationToken,
-          "X-Bz-File-Name": encodeURIComponent(`kwikpik-${sha1}/${fileName}`),
+          "X-Bz-File-Name": encodeURIComponent(`kwikpik-${bucketId}/${fileName}`),
           "Content-Type": "b2/x-auto",
-          "Content-Length": fileContent.byteLength,
+          "Content-Length": fileContent.length,
           "X-Bz-Content-Sha1": sha1,
         }
       );
@@ -158,6 +159,6 @@ class LocalBackblazeInstance {
 
 /**
  *
- * @param opts IPFS configuration. {@link BackblazeConfig | See implementation}.
+ * @param opts Backblaze configuration. {@link BackblazeConfig | See implementation}.
  */
 export const initializeBackblazeInstance = (opts: BackblazeConfig) => LocalBackblazeInstance.construct(opts);
