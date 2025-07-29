@@ -95,7 +95,7 @@ class LocalBackblazeInstance {
       const authorizationResponse = await this.authorizeAccount();
       const innerHttpInstance = HTTPModule.constructWithBaseURL(authorizationResponse.apiInfo.storageApi.apiUrl);
       const response = await innerHttpInstance.get<GetUploadURLResponse>(
-        "/b2_get_upload_url",
+        "/b2api/v4/b2_get_upload_url",
         { Authorization: authorizationResponse.authorizationToken },
         { bucketId }
       );
