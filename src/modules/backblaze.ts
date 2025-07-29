@@ -93,7 +93,8 @@ class LocalBackblazeInstance {
   private async getUploadURL(bucketId: string): Promise<GetUploadURLResponse> {
     try {
       const authorizationResponse = await this.authorizeAccount();
-      const response = await this.$httpInstance.get<GetUploadURLResponse>(
+      const innerHttpInstance = HTTPModule.constructWithBaseURL(authorizationResponse.apiInfo.storageApi.apiUrl);
+      const response = await innerHttpInstance.get<GetUploadURLResponse>(
         "/b2_get_upload_url",
         { Authorization: authorizationResponse.authorizationToken },
         { bucketId }
@@ -135,17 +136,14 @@ class LocalBackblazeInstance {
       const uploadUrlResponse = await this.getUploadURL(bucketId);
       fileName = fileName ?? `${Date.now()}-${randomUUID()}`;
       const sha1 = createHash("sha1").update(fileContent).digest("hex");
-      const response = await this.$httpInstance.post<any, UploadFileResponse>(
-        uploadUrlResponse.uploadUrl,
-        fileContent,
-        {
-          Authorization: uploadUrlResponse.authorizationToken,
-          "X-Bz-File-Name": encodeURIComponent(`kwikpik-${bucketId}/${fileName}`),
-          "Content-Type": "b2/x-auto",
-          "Content-Length": fileContent.length,
-          "X-Bz-Content-Sha1": sha1,
-        }
-      );
+      const innerHttpInstance = HTTPModule.constructWithBaseURL(uploadUrlResponse.uploadUrl);
+      const response = await innerHttpInstance.post<any, UploadFileResponse>("/", fileContent, {
+        Authorization: uploadUrlResponse.authorizationToken,
+        "X-Bz-File-Name": encodeURIComponent(`kwikpik-${bucketId}/${fileName}`),
+        "Content-Type": "b2/x-auto",
+        "Content-Length": fileContent.length,
+        "X-Bz-Content-Sha1": sha1,
+      });
       assert.ok(
         response.responseType === HttpResponseTypes.SUCCESS && typeof response.data !== "string",
         "invalid backblaze response"
