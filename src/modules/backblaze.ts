@@ -67,7 +67,7 @@ class LocalBackblazeInstance {
   private $httpInstance: HTTPModule;
 
   constructor(opts: BackblazeConfig) {
-    opts.mainUrl = opts.mainUrl ?? "https://api.backblazeb2.com/b2api/v4";
+    opts.mainUrl = opts.mainUrl ?? "https://api.backblazeb2.com/b2api/v2";
     const accessKey = Buffer.from(`${opts.applicationKeyId}:${opts.applicationKey}`).toString("base64");
     this.$httpInstance = new HTTPModule(opts.mainUrl, { Authorization: `Basic ${accessKey}` });
   }
@@ -95,7 +95,7 @@ class LocalBackblazeInstance {
       const authorizationResponse = await this.authorizeAccount();
       const innerHttpInstance = HTTPModule.constructWithBaseURL(authorizationResponse.apiInfo.storageApi.apiUrl);
       const response = await innerHttpInstance.get<GetUploadURLResponse>(
-        "/b2api/v4/b2_get_upload_url",
+        "/b2api/v2/b2_get_upload_url",
         { Authorization: authorizationResponse.authorizationToken },
         { bucketId }
       );
