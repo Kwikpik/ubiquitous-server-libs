@@ -28,10 +28,16 @@ export class HTTPModule {
     params?: Record<string, any>
   ): Promise<ResponseInterface<T> | ResponseInterface<string>> {
     try {
+      console.table(body);
+      console.table(headers);
+      console.table(params);
       const res = await this.axiosInstance.post<T>(path, body, { headers, params });
       return { statusCode: res.status, responseType: HttpResponseTypes.SUCCESS, data: res.data };
     } catch (error: any) {
-      console.error(error.response?.data); // Log error
+      console.error({
+        error: error.response?.data,
+        path,
+      }); // Log error
       return {
         statusCode: error.response?.status ?? HttpStatusCodes.INTERNAL_SERVER_ERROR,
         responseType: HttpResponseTypes.FAILED,
@@ -46,10 +52,15 @@ export class HTTPModule {
     params?: Record<string, any>
   ): Promise<ResponseInterface<T> | ResponseInterface<string>> {
     try {
+      console.table(headers);
+      console.table(params);
       const res = await this.axiosInstance.get<T>(path, { headers, params });
       return { statusCode: res.status, responseType: HttpResponseTypes.SUCCESS, data: res.data };
     } catch (error: any) {
-      console.error(error.response?.data);
+      console.error({
+        error: error.response?.data,
+        path,
+      });
       return {
         statusCode: error.response?.status ?? HttpStatusCodes.INTERNAL_SERVER_ERROR,
         responseType: HttpResponseTypes.FAILED,
@@ -65,6 +76,9 @@ export class HTTPModule {
     params?: Record<string, any>
   ): Promise<ResponseInterface<T> | ResponseInterface<string>> {
     try {
+      console.table(body);
+      console.table(headers);
+      console.table(params);
       const res = await this.axiosInstance.patch<T>(path, body, { headers, params });
       return { statusCode: res.status, responseType: HttpResponseTypes.SUCCESS, data: res.data };
     } catch (error: any) {
@@ -84,6 +98,9 @@ export class HTTPModule {
     params?: Record<string, any>
   ): Promise<ResponseInterface<T> | ResponseInterface<string>> {
     try {
+      console.table(body);
+      console.table(headers);
+      console.table(params);
       const res = await this.axiosInstance.put<T>(path, body, { headers, params });
       return { statusCode: res.status, responseType: HttpResponseTypes.SUCCESS, data: res.data };
     } catch (error: any) {
@@ -102,6 +119,8 @@ export class HTTPModule {
     params?: Record<string, any>
   ): Promise<ResponseInterface<T> | ResponseInterface<string>> {
     try {
+      console.table(headers);
+      console.table(params);
       const res = await this.axiosInstance.delete<T>(path, { headers, params });
       return { statusCode: res.status, responseType: HttpResponseTypes.SUCCESS, data: res.data };
     } catch (error: any) {
