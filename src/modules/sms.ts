@@ -110,6 +110,15 @@ class SMSModule {
       throw error;
     }
   }
+
+  async sendOfflineRequestPin(to: string | string[], code: string, user?: string) {
+    try {
+      const msg = await send(to, fillStringPlaceholders(SMS.OFFLINE_REQUEST_PIN, { user, code }));
+      return msg;
+    } catch (error: any) {
+      throw error;
+    }
+  }
 }
 
 /**

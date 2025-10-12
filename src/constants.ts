@@ -26,6 +26,7 @@ export enum SMS {
   PHONE_NUMBER_CHANGE_OTP = "Dear {user}, \n You have requested to change your phone number, use the OTP - {code} - to change your phone number.",
   PACKAGE_PROTECTION_CODE = "Dear {user}, \n Your package is now in transit. Send the code - {code} - to the recipient, and ask them to verify with the rider.",
   EXTERNAL_VERIFICATION = "Dear {user}, \n Please use the code - {code} - to verify the supplied phone number.",
+  OFFLINE_REQUEST_PIN = "Dear {user}, \n Please use the code - {code} - to verify your package delivery by Kwikpik.",
 }
 
 export enum Vehicles {

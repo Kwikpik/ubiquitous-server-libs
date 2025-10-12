@@ -76,9 +76,9 @@ export class HTTPModule {
     params?: Record<string, any>
   ): Promise<ResponseInterface<T> | ResponseInterface<string>> {
     try {
-      console.table(body);
-      console.table(headers);
-      console.table(params);
+      // console.table(body);
+      // console.table(headers);
+      // console.table(params);
       const res = await this.axiosInstance.patch<T>(path, body, { headers, params });
       return { statusCode: res.status, responseType: HttpResponseTypes.SUCCESS, data: res.data };
     } catch (error: any) {
