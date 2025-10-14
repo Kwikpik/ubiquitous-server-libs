@@ -111,9 +111,19 @@ class SMSModule {
     }
   }
 
-  async sendOfflineRequestPin(to: string | string[], code: string, user?: string) {
+  async sendOfflineRequestPin(
+    to: string | string[],
+    code: string,
+    itemId: string,
+    riderName: string,
+    riderPhoneNumber: string,
+    user?: string
+  ) {
     try {
-      const msg = await send(to, fillStringPlaceholders(SMS.OFFLINE_REQUEST_PIN, { user, code }));
+      const msg = await send(
+        to,
+        fillStringPlaceholders(SMS.OFFLINE_REQUEST_PIN, { user, code, itemId, riderName, riderPhoneNumber })
+      );
       return msg;
     } catch (error: any) {
       throw error;
