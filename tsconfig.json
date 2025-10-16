@@ -2,10 +2,7 @@
   "exclude": ["mail", "test", "jest*", "node_modules", "dist"],
   "compilerOptions": {
     "target": "es5" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
-    "lib": [
-      "dom",
-      "es2015"
-    ],
+    "lib": ["dom", "es2015"],
     "module": "commonjs" /* Specify what module code is generated. */,
     "rootDir": "./src" /* Specify the root folder within your source files. */,
     "resolveJsonModule": true /* Enable importing .json files. */,

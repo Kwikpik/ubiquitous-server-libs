@@ -117,7 +117,7 @@ class NombaPaymentModule {
 
     try {
       console.log(this.globalMutableHeaders, "headers");
-      
+
       const resp = await this.$.post<Record<string, any>, AccessTokenResponse>(
         "/auth/token/issue",
         body,
