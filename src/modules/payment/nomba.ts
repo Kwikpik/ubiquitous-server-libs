@@ -105,6 +105,8 @@ class NombaPaymentModule {
     this.globalMutableHeaders = headers;
 
     this.$ = new HTTPModule(url);
+
+    this.obtainAccessToken = this.obtainAccessToken.bind(this);
   }
 
   private async obtainAccessToken() {
@@ -114,6 +116,8 @@ class NombaPaymentModule {
     body.client_secret = this.clientSecret;
 
     try {
+      console.log(this.globalMutableHeaders, "headers");
+      
       const resp = await this.$.post<Record<string, any>, AccessTokenResponse>(
         "/auth/token/issue",
         body,
