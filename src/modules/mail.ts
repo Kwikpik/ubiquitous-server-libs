@@ -11,7 +11,6 @@ const configWithHBS = (templatesDirectory: string) => {
     viewPath: templatesDirectory,
     viewEngine: {
       partialsDir: templatesDirectory,
-      defaultLayout: false,
     },
   });
 };
