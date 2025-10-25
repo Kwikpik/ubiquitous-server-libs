@@ -9,3 +9,4 @@ yarn-error.log
 /mail
 dist
 .env*
+.npmrc

@@ -1,6 +1,6 @@
 {
   "name": "@kwikpik/server-libs",
-  "version": "1.11.9",
+  "version": "1.12.0",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
@@ -13,9 +13,13 @@
     "logistics",
     "delivery"
   ],
-  "author": "",
+  "author": "Kwikpik",
   "license": "ISC",
   "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kwikpik/ubiquitous-server-libs.git"
+  },
   "dependencies": {
     "@lonely_dev/termii-js": "^1.0.4",
     "@onesignal/node-onesignal": "^5.0.0-alpha-01",
