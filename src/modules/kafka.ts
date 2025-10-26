@@ -50,7 +50,7 @@ export interface LocalKafkaConsumerOpts {
   sessionTimeout?: number;
 }
 
-class LocalKafkaInstance {
+export class LocalKafkaInstance {
   private K: Kafka;
   private producer: Producer | null = null;
   private consumer: Consumer | null = null;

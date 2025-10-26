@@ -88,7 +88,7 @@ export interface GetTransactionByRefResponse extends BaseResponse {
   };
 }
 
-class NombaPaymentModule {
+export class NombaPaymentModule {
   private $: HTTPModule | null = null;
   private clientId: string = "";
   private clientSecret: string = "";

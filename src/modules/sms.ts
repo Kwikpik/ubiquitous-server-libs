@@ -2,7 +2,7 @@ import { SMS } from "../constants";
 import { initializeSMSSender, send } from "../utils/sms";
 import { fillStringPlaceholders } from "../utils/mappers";
 
-class SMSModule {
+export class SMSModule {
   constructor(apiKey?: string) {
     initializeSMSSender(apiKey);
   }
