@@ -92,19 +92,20 @@ export class NombaPaymentModule {
   private $: HTTPModule | null = null;
   private clientId: string = "";
   private clientSecret: string = "";
+  private baseUrl: string = ""
   private globalMutableHeaders: Record<string, any>;
 
-  constructor(clientId: string, clientSecret: string, accountId: string) {
+  constructor(clientId: string, clientSecret: string, accountId: string, baseUrl?: string) {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
+    this.baseUrl = baseUrl ?? "https://api.nomba.com/v1"
 
-    const url = "https://api.nomba.com/v1";
     const headers: Record<string, any> = {};
 
     headers.accountId = accountId;
     this.globalMutableHeaders = headers;
 
-    this.$ = new HTTPModule(url);
+    this.$ = new HTTPModule(this.baseUrl);
 
     this.obtainAccessToken = this.obtainAccessToken.bind(this);
   }
@@ -270,5 +271,5 @@ export class NombaPaymentModule {
  * @param accountId Nomba account ID
  * @returns
  */
-export const initNombaPaymentModule = (clientId: string, clientSecret: string, accountId: string) =>
-  new NombaPaymentModule(clientId, clientSecret, accountId);
+export const initNombaPaymentModule = (clientId: string, clientSecret: string, accountId: string, baseUrl?: string) =>
+  new NombaPaymentModule(clientId, clientSecret, accountId, baseUrl);
