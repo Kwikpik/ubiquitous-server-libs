@@ -2,6 +2,7 @@
   "name": "@kwikpik/server-libs",
   "version": "1.12.2",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
     "format": "prettier --ignore-path \"./.prettierignore\" --write **/**/*.{js,ts,json}",
