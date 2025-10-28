@@ -123,18 +123,22 @@ export class NombaPaymentModule {
         this.globalMutableHeaders
       );
 
+      console.log(resp, "response from obtaining token");
+      
       if (typeof resp.data === "string") throw new Error(resp.data);
       if (resp.data.code !== "00") throw new Error(resp.data.description);
 
       return resp.data as AccessTokenResponse;
     } catch (error: any) {
+      console.log(error, "error retrieving token");
+      
       return Promise.reject(error);
     }
   }
 
   async getBalance(accountId: string) {
     try {
-      const accessTokenResp = await this.obtainAccessToken();
+      const accessTokenResp = await this.obtainAccessToken();      
 
       const headers: Record<string, any> = this.globalMutableHeaders;
       headers.Authorization = `Bearer ${accessTokenResp.data.access_token}`;
@@ -146,7 +150,7 @@ export class NombaPaymentModule {
       if (balanceResp.data.code !== "00") throw new Error(balanceResp.data.description);
 
       return balanceResp.data as AccountBalanceResponse;
-    } catch (error: any) {
+    } catch (error: any) {      
       return Promise.reject(error);
     }
   }
@@ -159,6 +163,7 @@ export class NombaPaymentModule {
 
     try {
       const accessTokenResp = await this.obtainAccessToken();
+      console.log(accessTokenResp, "access token response");
 
       const headers: Record<string, any> = this.globalMutableHeaders;
       headers.Authorization = `Bearer ${accessTokenResp.data.access_token}`;
@@ -169,11 +174,14 @@ export class NombaPaymentModule {
         headers
       );
 
+      console.log(resp, "errror creating Nomba account");
+
       if (typeof resp.data === "string") throw new Error(resp.data);
       if (resp.data.code !== "00") throw new Error(resp.data.description);
 
       return resp.data as CreateVirtualAccountResponse;
     } catch (error: any) {
+      console.log(error, "error from Nomba");
       return Promise.reject(error);
     }
   }
