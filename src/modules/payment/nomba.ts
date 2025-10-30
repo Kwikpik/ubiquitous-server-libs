@@ -92,13 +92,18 @@ export class NombaPaymentModule {
   private $: HTTPModule | null = null;
   private clientId: string = "";
   private clientSecret: string = "";
-  private baseUrl: string = ""
+  private baseUrl: string = "";
   private globalMutableHeaders: Record<string, any>;
+
+  // Access token
+  private accessToken: string | null = null;
+  private refreshToken: string = "";
+  private expirationTime: number = 0;
 
   constructor(clientId: string, clientSecret: string, accountId: string, baseUrl?: string) {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
-    this.baseUrl = baseUrl ?? "https://api.nomba.com/v1"
+    this.baseUrl = baseUrl ?? "https://api.nomba.com/v1";
 
     const headers: Record<string, any> = {};
 
@@ -107,41 +112,61 @@ export class NombaPaymentModule {
 
     this.$ = new HTTPModule(this.baseUrl);
 
-    this.obtainAccessToken = this.obtainAccessToken.bind(this);
+    this.obtainOrRefreshAccessToken = this.obtainOrRefreshAccessToken.bind(this);
   }
 
-  private async obtainAccessToken() {
-    const body: Record<string, any> = {};
-    body.grant_type = "client_credentials";
-    body.client_id = this.clientId;
-    body.client_secret = this.clientSecret;
-
+  private async obtainOrRefreshAccessToken() {
     try {
-      const resp = await this.$.post<Record<string, any>, AccessTokenResponse>(
-        "/auth/token/issue",
-        body,
-        this.globalMutableHeaders
-      );
+      const body: Record<string, any> = {};
 
-      console.log(resp, "response from obtaining token");
-      
-      if (typeof resp.data === "string") throw new Error(resp.data);
-      if (resp.data.code !== "00") throw new Error(resp.data.description);
+      // Now
+      const now = Date.now();
+      if (this.accessToken === null) {
+        body.grant_type = "client_credentials";
+        body.client_id = this.clientId;
+        body.client_secret = this.clientSecret;
 
-      return resp.data as AccessTokenResponse;
+        const resp = await this.$.post<Record<string, any>, AccessTokenResponse>(
+          "/auth/token/issue",
+          body,
+          this.globalMutableHeaders
+        );
+
+        if (typeof resp.data === "string") throw new Error(resp.data);
+        if (resp.data.code !== "00") throw new Error(resp.data.description);
+
+        const accessTokenResponse = resp.data as AccessTokenResponse;
+        this.accessToken = accessTokenResponse.data.access_token;
+        this.refreshToken = accessTokenResponse.data.refresh_token;
+        this.expirationTime = Date.now() + 600000; // 10 minutes;
+      } else if (this.accessToken !== null && now >= this.expirationTime) {
+        const headers = this.globalMutableHeaders;
+        headers.Authorization = `Bearer ${this.accessToken}`;
+
+        body.grant_type = "refresh_token";
+        body.refresh_token = this.refreshToken;
+
+        const resp = await this.$.post<Record<string, any>, AccessTokenResponse>("/auth/token/refresh", body, headers);
+
+        if (typeof resp.data === "string") throw new Error(resp.data);
+        if (resp.data.code !== "00") throw new Error(resp.data.description);
+
+        const accessTokenRefreshResponse = resp.data as AccessTokenResponse;
+        this.accessToken = accessTokenRefreshResponse.data.access_token;
+        this.refreshToken = accessTokenRefreshResponse.data.refresh_token;
+        this.expirationTime = Date.now() + 600000; // 10 minutes;
+      }
     } catch (error: any) {
-      console.log(error, "error retrieving token");
-      
       return Promise.reject(error);
     }
   }
 
   async getBalance(accountId: string) {
     try {
-      const accessTokenResp = await this.obtainAccessToken();      
+      await this.obtainOrRefreshAccessToken();
 
       const headers: Record<string, any> = this.globalMutableHeaders;
-      headers.Authorization = `Bearer ${accessTokenResp.data.access_token}`;
+      headers.Authorization = `Bearer ${this.accessToken}`;
 
       const urlPath = "/accounts/{accountId}/balance";
       const balanceResp = await this.$.get<AccountBalanceResponse>(fillStringPlaceholders(urlPath, { accountId }));
@@ -150,7 +175,7 @@ export class NombaPaymentModule {
       if (balanceResp.data.code !== "00") throw new Error(balanceResp.data.description);
 
       return balanceResp.data as AccountBalanceResponse;
-    } catch (error: any) {      
+    } catch (error: any) {
       return Promise.reject(error);
     }
   }
@@ -162,11 +187,10 @@ export class NombaPaymentModule {
     body.accountName = accountName;
 
     try {
-      const accessTokenResp = await this.obtainAccessToken();
-      console.log(accessTokenResp, "access token response");
+      await this.obtainOrRefreshAccessToken();
 
       const headers: Record<string, any> = this.globalMutableHeaders;
-      headers.Authorization = `Bearer ${accessTokenResp.data.access_token}`;
+      headers.Authorization = `Bearer ${this.accessToken}`;
 
       const resp = await this.$.post<Record<string, any>, CreateVirtualAccountResponse>(
         "/accounts/virtual",
@@ -188,10 +212,10 @@ export class NombaPaymentModule {
 
   async getTransactionOnParentAccountUsingReference(txRef: string) {
     try {
-      const accessTokenResp = await this.obtainAccessToken();
+      await this.obtainOrRefreshAccessToken();
 
       const headers: Record<string, any> = this.globalMutableHeaders;
-      headers.Authorization = `Bearer ${accessTokenResp.data.access_token}`;
+      headers.Authorization = `Bearer ${this.accessToken}`;
 
       const queryParams: Record<string, any> = {};
 
@@ -210,10 +234,10 @@ export class NombaPaymentModule {
 
   async getTransactionOnNonParentAccountUsingReference(accountId: string, txRef: string) {
     try {
-      const accessTokenResp = await this.obtainAccessToken();
+      await this.obtainOrRefreshAccessToken();
 
       const headers: Record<string, any> = this.globalMutableHeaders;
-      headers.Authorization = `Bearer ${accessTokenResp.data.access_token}`;
+      headers.Authorization = `Bearer ${this.accessToken}`;
 
       const queryParams: Record<string, any> = {};
 
@@ -255,10 +279,10 @@ export class NombaPaymentModule {
     body.narration = narration;
 
     try {
-      const accessTokenResp = await this.obtainAccessToken();
+      await this.obtainOrRefreshAccessToken();
 
       const headers: Record<string, any> = this.globalMutableHeaders;
-      headers.Authorization = `Bearer ${accessTokenResp.data.access_token}`;
+      headers.Authorization = `Bearer ${this.accessToken}`;
 
       const resp = await this.$.post<Record<string, any>, BankTransferResponse>("/transfers/bank", body, headers);
 
